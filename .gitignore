@@ -1,0 +1,12 @@
+.*
+!.gitignore
+
+# Local data base dump
+pgsql/db_dump
+
+# nginx logs
+nginx/logs
+
+# environmental variables files
+php-fpm/php.env
+pgsql/pgsql.env
