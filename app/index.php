@@ -1,3 +1,3 @@
 <?php
 
-    echo 'Basic web application';
+    echo 'Basic web application!';
