@@ -10,3 +10,6 @@ nginx/logs
 # environmental variables files
 php-fpm/php.env
 pgsql/pgsql.env
+
+# vendor
+vendor/*
