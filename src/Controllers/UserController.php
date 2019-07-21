@@ -8,6 +8,7 @@ class UserController{
 
         $data = [];
 
+        $user = 'user';
         for($i = 0; $i < 10; $i++){
             $data[$user . $i]['id'] = $i;
             $data[$user . $i]['age'] = $i + 3;
@@ -25,23 +26,27 @@ class UserController{
         }
     }
 
-    public function actionDeleteUser($id = null){
+    public function actionDeleteUser($id = null)
+    {
 
         return $data = '[DELETE]';
     }
 
 
-    public function actionPostUser(){
+    public function actionPostUser()
+    {
         
         return $data = '[POST]';
     }
 
-    public function actionPatchUser($id = null){
+    public function actionPatchUser($id = null)
+    {
         
         return $data = '[PATCH]';
     }
 
-    public function actionPutUser(){
+    public function actionPutUser()
+    {
         
         return $data['PUT'];
     }
