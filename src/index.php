@@ -1,56 +1,47 @@
 <?php
+
+use App\Models\User;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Slim\App;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 
-$configuration = [
+$config = [
     'settings' => [
         'displayErrorDetails' => true,
     ],
 ];
 
-$conf = new \Slim\Container($configuration);
+$app = new App($config);
 
-$app = new \Slim\App($conf);
-
-$rout = function ($request, $response, $next) {
-    // $response->getBody()->write('');
+$emptyResponse = function ($request, $response, $next)
+{
     $response = $next($request, $response);
-    $response->getBody()->write(' [Middleware after!]');
+
+    if (empty($response->getBody()->getContents())) {
+        $response = $response->withStatus(404);
+    }
 
     return $response;
 };
 
+$app->add($emptyResponse);
 
+$app->get('/users', function (Request $request, Response $response) {
 
-
-$app->any('/{controllerName}[/{id}]', function (Request $request, Response $response, $args) {
-
-    $method = $request->getMethod();
-    $controllerName = $args['controllerName'];
-    $id = $args['id'];
-    $className = 'App\Controllers\\' . ucfirst($controllerName) . 'Controller';
-    $actionName = 'action' . ucfirst(strtolower($method)) . ucfirst($controllerName);
-
-    $object = new $className();
-    $result = $object->$actionName($id);
+    $result = (new User())->getUsers();
 
     return $response->withJson($result);
-    
-})->add($rout);
+});
 
+$app->get('/users/{id}', function (Request $request, Response $response, $args) {
 
+    $id = filter_var($args['id'], FILTER_VALIDATE_INT);
+    $result = (new User())->getUser($id);
 
-
-$app->get('/', function ($request, $response, $args) {
-
-    return $response->withJson('Api doc');
-
+    return $response->withJson($result);
 });
 
 $app->run();
-
-
-

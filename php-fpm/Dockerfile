@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y wget git unzip \
     && pecl install xdebug-2.6.1 \
     && docker-php-ext-enable xdebug
 
-RUN apt-get install -y ssmtp
+#RUN apt-get install -y ssmtp
 
 COPY php.ini /usr/local/etc/php
 
