@@ -3,9 +3,15 @@
 
 namespace App\Models;
 
+use App\Base\DataBase;
+
+//$config = require_once ('../Config/db.php');
+
+
 
 class User
 {
+
     private $users = [
         [
             'id' => 1,
@@ -32,7 +38,20 @@ class User
 
     public function getUsers()
     {
-        return $this->users;
+//        return $this->users;
+        $config = require_once (ROOT . '/Config/db.php');
+//var_dump($config);
+//die();
+
+
+        $db = DataBase::getInstance($config);
+
+//        var_dump($db);
+//        die;
+        $res = $db->pdo->query("SELECT * FROM users")->fetchAll();
+//        var_dump($res);
+//        die;
+        return $res;
     }
 
     public function getUser(int $id)
@@ -41,4 +60,9 @@ class User
            return $user['id'] === $id;
         });
     }
+
+
+
+
+
 }

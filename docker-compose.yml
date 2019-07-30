@@ -24,9 +24,4 @@ services:
     env_file:
       - pgsql/pgsql.env
     volumes:
-      - "database:/var/lib/postgresql/data"
       - ".pgsql/db_dump:/db_dump"
-
-volumes:
-    database:
-

@@ -7,6 +7,7 @@ use Slim\App;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
+//require_once (ROOT . '/Config/db.php');
 
 $config = [
     'settings' => [
