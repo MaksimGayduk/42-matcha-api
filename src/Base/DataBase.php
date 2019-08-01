@@ -3,11 +3,10 @@
 namespace App\Base;
 
 
-
-class DataBase{
+class DataBase
+{
 
     public $pdo;
-    private $tableName;
     private static $dbInstance;
 
 
@@ -18,13 +17,11 @@ class DataBase{
     }
 
 
-    public static function getInstance(array $config=null): DataBase //string $tableName=null,
+    public static function getInstance(): DataBase //string $tableName=null,
     {
         if (!self::$dbInstance)
+            $config = include(ROOT . '/Config/db.php');
             self::$dbInstance = new self($config);
-//        if ($tableName !== null) {
-//            self::$dbInstance->useTable($tableName);
-//        }
         return self::$dbInstance;
     }
 
