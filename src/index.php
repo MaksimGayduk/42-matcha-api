@@ -9,17 +9,17 @@ use Slim\Container;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
-$db = require_once (ROOT . '/Config/db.php');
+$configDb = require_once (ROOT . '/Config/db.php');
 
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
+        'configDb' => $configDb,
     ],
 ];
 
 
-//var_dump($db);
-//die;
+
 
 $app = new App($config);
 
@@ -28,10 +28,13 @@ $container = $app->getContainer();
 
 $container['objectDataBase'] = function ($container) {
 
-    $db = DataBase::getInstance();
+    $configDb = $container->get('settings')['configDb'];
+    $db = DataBase::getInstance($configDb);
 
     return $db;
 };
+
+
 
 
 
@@ -48,11 +51,45 @@ $container['objectDataBase'] = function ($container) {
 
 
 
+$sortMiddleware = function(Request $request, Response $response, $next) {
+
+    $params = $request->getQueryParams();
+    $query = $request->getAttribute('query');
+    $sort = $params['sort'] ?? null;
+
+    if ($sort) {
+        $arrSort = explode(',', $sort);
+        $shouldSeparate = count($arrSort) - 1;
+        $query .= ' ORDER BY';
+        foreach ($arrSort as $value) {
+            if($value[0] === '-'){
+                $value = substr($value, 1);
+                $order = 'DESC';
+            }
+            else{
+                $order = 'ASC';
+            }
+
+            $query .= " ${value} ${order}";
+            if ($shouldSeparate--) {
+                $query .= " ,";
+            }
+        }
+
+        $request = $request->withAttribute('query', $query);
+    }
+
+    $response = $next($request, $response);
+
+
+    return $response;
+};
+
+
+
 $selectMiddleware = function (Request $request, Response $response, $next) {
 
     $arrRout = (explode('/',  $request->getUri()->getPath()));
-
-//    $tableName = (substr($request->getUri()->getPath(), 1));
     $tableName = $arrRout[1];
     $query = 'SELECT * FROM ' . $tableName;
 
@@ -68,8 +105,7 @@ $selectMiddleware = function (Request $request, Response $response, $next) {
 $filterMiddleware = function (Request $request, Response $response, $next) {
 
     $arrRout = (explode('/',  $request->getUri()->getPath()));
-
-    if(!empty($arrRout[2]) ){ //&& empty($request->getQueryParams()) // Если добавить второе условие, будет поиск по $request->getQueryParams() который пришел
+    if(!empty($arrRout[2]) && empty($request->getQueryParams())){ //&& empty($request->getQueryParams()) // Если добавить второе условие, будет поиск по $request->getQueryParams() который пришел
         $id = filter_var($arrRout[2], FILTER_VALIDATE_INT);
         $arrSetQueryParams['filters'] = ['id' => $id];
 
@@ -105,32 +141,29 @@ $filterMiddleware = function (Request $request, Response $response, $next) {
 };
 
 
-$app->get('/users[/{id}]', function (Request $request, Response $response, $args) {
-
+$app->get('/{rout}[/{id}]', function (Request $request, Response $response, $args) {
 
     $modelUser = (new User($this->get('objectDataBase')));
-    $modelUser->createQuery($request);
+    $modelUser->fetchQuery($request);
     $result = $modelUser->getUsers();
 
     return $response->withJson($result);
 
-})->add($filterMiddleware)->add($selectMiddleware);
-
+})->add($sortMiddleware)->add($filterMiddleware)->add($selectMiddleware);
 
 
 //$app->get('/{rout}/{id}', function (Request $request, Response $response, $args) {
-
-////    var_dump($request->getUri()->getPath());
-
+//
+//
 //    $id = filter_var($args['id'], FILTER_VALIDATE_INT);
 //
-
+//
 ////    var_dump($request->getQueryParams());
 ////    die;
 //
 //    $modelUser = (new User($this->get('objectDataBase')));
-//    $modelUser->createQuery($request);
-//    $result = $modelUser->getUser($id);
+//    $modelUser->fetchQuery($request);
+//    $result = $modelUser->getUser();
 //
 //    return $response->withJson($result);
 //})->add($filterMiddleware)->add($selectMiddleware);

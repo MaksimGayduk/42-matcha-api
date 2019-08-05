@@ -17,10 +17,10 @@ class DataBase
     }
 
 
-    public static function getInstance(): DataBase //string $tableName=null,
+    public static function getInstance($config): DataBase
     {
+
         if (!self::$dbInstance)
-            $config = include(ROOT . '/Config/db.php');
             self::$dbInstance = new self($config);
         return self::$dbInstance;
     }

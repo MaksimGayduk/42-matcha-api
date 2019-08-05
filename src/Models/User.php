@@ -4,8 +4,6 @@
 namespace App\Models;
 
 use App\Base\BaseModel;
-use http\Client\Request;
-
 
 class User extends BaseModel
 {
@@ -30,8 +28,5 @@ class User extends BaseModel
 //
 //        return $res;
 //    }
-
-
-
 
 }

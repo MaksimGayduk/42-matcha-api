@@ -5,6 +5,7 @@ namespace App\Base;
 
 
 use Slim\Http\Request;
+use Slim\App;
 
 class BaseModel
 {
@@ -19,12 +20,11 @@ class BaseModel
 
 
 
-    public function createQuery(Request $request){
+    public function fetchQuery(Request $request){
+
         $this->query = $request->getAttribute('query');
         $this->queryParams = $request->getAttribute('queryParams');
 
-//        var_dump($this->queryParams);
-//        die;
     }
 
 
