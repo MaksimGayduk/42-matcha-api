@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use App\Base\BaseModel;
+use http\Client\Request;
 
 
 class User extends BaseModel
@@ -13,18 +14,22 @@ class User extends BaseModel
     public function getUsers()
     {
 
-        $res = $this->db->pdo->query("SELECT * FROM users")->fetchAll();
-
-        return $res;
+        $res = $this->db->pdo->prepare($this->query);
+        $res->execute($this->queryParams);
+        return $res->fetchAll();
     }
 
-    public function getUser(int $id)
-    {
-
-        $res = $this->db->pdo->query("SELECT * FROM users WHERE id=$id")->fetchAll();
-
-        return $res;
-    }
+//    public function getUser(int $id)
+//    {
+//
+//        $res = $this->db->pdo->query("SELECT * FROM users WHERE id=$id")->fetchAll();
+//
+//        $res = $this->db->pdo->prepare($this->query);
+//        $res->execute($this->queryParams);
+//        return $res->fetchAll();
+//
+//        return $res;
+//    }
 
 
 

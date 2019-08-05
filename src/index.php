@@ -14,7 +14,6 @@ $db = require_once (ROOT . '/Config/db.php');
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
-//        'db' => $db,
     ],
 ];
 
@@ -22,7 +21,7 @@ $config = [
 //var_dump($db);
 //die;
 
-$app = new App();
+$app = new App($config);
 
 
 $container = $app->getContainer();
@@ -36,48 +35,106 @@ $container['objectDataBase'] = function ($container) {
 
 
 
-$emptyResponse = function ($request, $response, $next)
-{
+//$emptyResponse = function ($request, $response, $next)
+//{
+//    $response = $next($request, $response);
+//
+//    if (empty($response->getBody()->getContents())) {
+//        $response = $response->withStatus(404);
+//    }
+//
+//    return $response;
+//};
+
+
+
+$selectMiddleware = function (Request $request, Response $response, $next) {
+
+    $arrRout = (explode('/',  $request->getUri()->getPath()));
+
+//    $tableName = (substr($request->getUri()->getPath(), 1));
+    $tableName = $arrRout[1];
+    $query = 'SELECT * FROM ' . $tableName;
+
+    $request = $request->withAttribute('query', $query);
+
     $response = $next($request, $response);
 
-    if (empty($response->getBody()->getContents())) {
-        $response = $response->withStatus(404);
-    }
 
     return $response;
 };
 
 
-$app->add($emptyResponse);
+$filterMiddleware = function (Request $request, Response $response, $next) {
+
+    $arrRout = (explode('/',  $request->getUri()->getPath()));
+
+    if(!empty($arrRout[2]) ){ //&& empty($request->getQueryParams()) // Если добавить второе условие, будет поиск по $request->getQueryParams() который пришел
+        $id = filter_var($arrRout[2], FILTER_VALIDATE_INT);
+        $arrSetQueryParams['filters'] = ['id' => $id];
+
+        $request = $request->withQueryParams($arrSetQueryParams);
+    }
+
+    $params = $request->getQueryParams();
+    $query = $request->getAttribute('query');
+    $filters = $params['filters'] ?? null;
 
 
+    if ($filters) {
+        $shouldSeparate = count($filters) - 1;
+        $query .= ' WHERE';
+        foreach ($filters as $key => $value) {
+            $query .= " ${key}=:${key}";
+            if ($shouldSeparate--) {
+                $query .= " AND";
+            }
+        }
+
+        $queryParams = $request->getAttribute('queryParams') ?? [];
+        $queryParams = array_merge($queryParams, $filters);
+
+        $request = $request->withAttribute('query', $query);
+        $request = $request->withAttribute('queryParams', $queryParams);
+    }
+
+    $response = $next($request, $response);
 
 
-$app->get('/users', function (Request $request, Response $response) {
+    return $response;
+};
 
-    var_dump($request->getQueryParams());
-    die;
 
-    //$result = (new User($this->get('objectDataBase')))->getUsers();
+$app->get('/users[/{id}]', function (Request $request, Response $response, $args) {
+
+
+    $modelUser = (new User($this->get('objectDataBase')));
+    $modelUser->createQuery($request);
+    $result = $modelUser->getUsers();
 
     return $response->withJson($result);
-});
+
+})->add($filterMiddleware)->add($selectMiddleware);
 
 
 
-$app->get('/users/{id}', function (Request $request, Response $response, $args) {
+//$app->get('/{rout}/{id}', function (Request $request, Response $response, $args) {
 
-//    $params = $request->getQueryParams();
+////    var_dump($request->getUri()->getPath());
+
+//    $id = filter_var($args['id'], FILTER_VALIDATE_INT);
 //
-//    var_dump($args);
-//    echo '<hr>';
-//    var_dump($params);
-//    die;
 
-    $id = filter_var($args['id'], FILTER_VALIDATE_INT);
-    $result = (new User($this->get('objectDataBase')))->getUser($id);
+////    var_dump($request->getQueryParams());
+////    die;
+//
+//    $modelUser = (new User($this->get('objectDataBase')));
+//    $modelUser->createQuery($request);
+//    $result = $modelUser->getUser($id);
+//
+//    return $response->withJson($result);
+//})->add($filterMiddleware)->add($selectMiddleware);
 
-    return $response->withJson($result);
-});
+
 
 $app->run();
