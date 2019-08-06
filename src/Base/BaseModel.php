@@ -25,6 +25,9 @@ class BaseModel
         $this->query = $request->getAttribute('query');
         $this->queryParams = $request->getAttribute('queryParams');
 
+//        var_dump($this->queryParams);
+//        die;
+
     }
 
 
