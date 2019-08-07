@@ -9,8 +9,6 @@ use App\Middlewares\FilterMiddleware;
 use App\Middlewares\SortMiddleware;
 use App\Middlewares\SelectMiddleware;
 
-
-
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 $configDb = require_once (ROOT . '/Config/db.php');
@@ -41,8 +39,8 @@ $container['objectDataBase'] = function ($container) {
 
 
 
-$app->get('/{rout}', function (Request $request, Response $response, $args) {
-
+$app->get('/{rout}', function (Request $request, Response $response, $args)
+{
     $modelUser = (new User($this->get('objectDataBase')));
     $modelUser->fetchQuery($request);
     $result = $modelUser->getUsers();
@@ -52,7 +50,8 @@ $app->get('/{rout}', function (Request $request, Response $response, $args) {
 })->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware());
 
 
-$app->get('/{rout}/{id}', function (Request $request, Response $response, $args) {
+$app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
+{
 
     $id = filter_var($args['id'], FILTER_VALIDATE_INT);
 

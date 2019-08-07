@@ -1,12 +1,9 @@
 <?php
 
-
 namespace App\Middlewares;
-
 
 class FilterMiddleware
 {
-
     public function __invoke($request, $response, $next)
     {
         $params = $request->getQueryParams();
@@ -15,31 +12,7 @@ class FilterMiddleware
 
         if ($filters) {
 
-            $shouldSeparate = count($filters) - 1;
-            $query .= ' WHERE';
-
-            foreach ($filters as $key => $value) {
-                if (stristr($value, ',')) {
-                    unset($filters[$key]);
-                    $arrNewValues = explode(',', $value);
-                    $string = '';
-                    $count = count($arrNewValues) - 1;
-                    foreach ($arrNewValues as $value){
-                        $prepareKey = $key . '_' . $value;
-                        $string .= ":${prepareKey}";
-                        $filters[$prepareKey] = $value;
-                        if($count--){
-                            $string .= ',';
-                        }
-                    }
-                    $query .= " ${key} IN (${string})";
-                } else {
-                    $query .= " ${key}=:${key}";
-                }
-                if ($shouldSeparate--) {
-                    $query .= " AND";
-                }
-            }
+            [$filters, $query] = $this->prepareFilterQuery($filters, $query);
 
             $queryParams = $request->getAttribute('queryParams') ?? [];
             $queryParams = array_merge($queryParams, $filters);
@@ -54,4 +27,38 @@ class FilterMiddleware
         return $response;
     }
 
+    private function prepareFilterQuery($filters, $query)
+    {
+        $shouldSeparate = count($filters) - 1;
+        $query .= ' WHERE';
+
+        foreach ($filters as $key => $value) {
+            if (stristr($value, ',')) {
+                unset($filters[$key]);
+                $arrNewValues = explode(',', $value);
+                $prepareString = '';
+                $count = count($arrNewValues) - 1;
+                foreach ($arrNewValues as $value){
+                    $prepareKey = $key . '_' . $value;
+                    $prepareString .= ":${prepareKey}";
+                    $filters[$prepareKey] = $value;
+                    if($count--){
+                        $prepareString .= ',';
+                    }
+                }
+                $query .= " ${key} IN (${prepareString})";
+            } else {
+                $query .= " ${key}=:${key}";
+            }
+
+            if ($shouldSeparate--) {
+                $query .= " AND";
+            }
+        }
+
+        return [
+            $filters,
+            $query,
+        ];
+    }
 }

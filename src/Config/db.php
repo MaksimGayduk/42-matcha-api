@@ -1,6 +1,5 @@
 <?php
 
-
 return [
     'driver' => 'pgsql',
     'host' => 'pgsql',
@@ -8,4 +7,3 @@ return [
     'user' => 'matcha',
     'password' => 'matcha',
 ];
-

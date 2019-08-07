@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Middlewares;
-
 
 class SelectMiddleware
 {
@@ -19,5 +17,4 @@ class SelectMiddleware
 
         return $response;
     }
-
 }

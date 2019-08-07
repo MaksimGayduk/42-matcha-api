@@ -1,24 +1,18 @@
 <?php
 
-
 namespace App\Models;
 
 use App\Base\BaseModel;
 
 class User extends BaseModel
 {
-
-
     public function getUsers()
     {
-
         $res = $this->db->pdo->prepare($this->query);
         $res->execute($this->queryParams);
 
         return $res->fetchAll();
     }
-
-
 
     public function getUser(int $id)
     {
@@ -31,5 +25,4 @@ class User extends BaseModel
 
         return $res;
     }
-
 }

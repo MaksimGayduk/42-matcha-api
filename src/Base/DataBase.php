@@ -2,33 +2,25 @@
 
 namespace App\Base;
 
-
 class DataBase
 {
-
     public $pdo;
     private static $dbInstance;
-
-
 
     private function __construct(array $config=null)
     {
         $this->getConnection($config);
     }
 
-
     public static function getInstance($config): DataBase
     {
-
         if (!self::$dbInstance)
             self::$dbInstance = new self($config);
         return self::$dbInstance;
     }
 
-
     private function getConnection(array $config=null): void
     {
-//        $config = $config ? $config : self::$config['db'];
         $driver     = $config['driver'];
         $host       = $config['host'];
         $dbname     = $config['dbname'];
