@@ -8,10 +8,12 @@ use Slim\App;
 use App\Middlewares\FilterMiddleware;
 use App\Middlewares\SortMiddleware;
 use App\Middlewares\SelectMiddleware;
+use App\Middlewares\ValidatorMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 $configDb = require_once (ROOT . '/Config/db.php');
+
 
 $config = [
     'settings' => [
@@ -21,13 +23,10 @@ $config = [
 ];
 
 
-
-
 $app = new App($config);
 
 
 $container = $app->getContainer();
-
 $container['objectDataBase'] = function ($container) {
 
     $configDb = $container->get('settings')['configDb'];
@@ -35,8 +34,6 @@ $container['objectDataBase'] = function ($container) {
 
     return $db;
 };
-
-
 
 
 $app->get('/{rout}', function (Request $request, Response $response, $args)
@@ -47,18 +44,17 @@ $app->get('/{rout}', function (Request $request, Response $response, $args)
 
     return $response->withJson($result);
 
-})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware());
+})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorMiddleware());
 
 
 $app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
 {
-
     $id = filter_var($args['id'], FILTER_VALIDATE_INT);
-
     $modelUser = (new User($this->get('objectDataBase')));
     $result = $modelUser->getUser($id);
 
     return $response->withJson($result);
 });
+
 
 $app->run();

@@ -6,6 +6,15 @@ use App\Base\BaseModel;
 
 class User extends BaseModel
 {
+
+    static protected $fields = [
+        'id' => 'int',
+        'login' => 'string',
+        'first_name' => 'string',
+        'last_name' => 'string',
+        'age' => 'int',
+    ];
+
     public function getUsers()
     {
         $res = $this->db->pdo->prepare($this->query);

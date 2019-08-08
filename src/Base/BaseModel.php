@@ -10,6 +10,7 @@ class BaseModel
     protected $query;
     protected $queryParams;
 
+
     public function __construct($objectDataBase)
     {
         $this->db = $objectDataBase;
@@ -19,5 +20,10 @@ class BaseModel
     {
         $this->query = $request->getAttribute('query');
         $this->queryParams = $request->getAttribute('queryParams');
+    }
+
+    public static function getFields()
+    {
+        return static::$fields;
     }
 }
