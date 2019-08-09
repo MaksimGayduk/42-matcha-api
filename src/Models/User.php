@@ -6,8 +6,7 @@ use App\Base\BaseModel;
 
 class User extends BaseModel
 {
-
-    static protected $fields = [
+    protected static $fields = [
         'id' => 'int',
         'login' => 'string',
         'first_name' => 'string',

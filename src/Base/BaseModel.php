@@ -10,7 +10,6 @@ class BaseModel
     protected $query;
     protected $queryParams;
 
-
     public function __construct($objectDataBase)
     {
         $this->db = $objectDataBase;

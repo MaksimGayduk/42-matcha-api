@@ -4,7 +4,6 @@ namespace App\Middlewares;
 
 class SelectMiddleware
 {
-
     public function __invoke($request, $response, $next)
     {
         $arrRout = (explode('/',  $request->getUri()->getPath()));

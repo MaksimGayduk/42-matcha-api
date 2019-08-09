@@ -46,7 +46,6 @@ class ValidatorMiddleware
         return $notValidParams ?? null;
     }
 
-
     private function validateQueryParamsKeys($request)
     {
         $paramsCmpKeys = [
@@ -62,7 +61,6 @@ class ValidatorMiddleware
             $notValidParams = implode(',', $notValidParams);
         return $notValidParams ?? null;
     }
-
 
     private function arrayKeyExists($params, $fields, $notValidParams)
     {
