@@ -1,44 +1,36 @@
 <?php
 
-
 namespace App\Models;
 
+use App\Base\BaseModel;
 
-class User
+class User extends BaseModel
 {
-    private $users = [
-        [
-            'id' => 1,
-            'login' => 'anonymus',
-            'firstName' => 'John',
-            'lastName' => 'Doe',
-            'age' => 27
-        ],
-        [
-            'id' => 2,
-            'login' => 'slim',
-            'firstName' => 'Vasia',
-            'lastName' => 'Pupkin',
-            'age' => 27
-        ],
-        [
-            'id' => 3,
-            'login' => 'yii',
-            'firstName' => 'Jacky',
-            'lastName' => 'Chan',
-            'age' => 27
-        ]
+    protected static $fields = [
+        'id' => 'int',
+        'login' => 'string',
+        'first_name' => 'string',
+        'last_name' => 'string',
+        'age' => 'int',
     ];
 
     public function getUsers()
     {
-        return $this->users;
+        $res = $this->db->pdo->prepare($this->query);
+        $res->execute($this->queryParams);
+
+        return $res->fetchAll();
     }
 
     public function getUser(int $id)
     {
-        return array_filter($this->users, function ($user) use ($id) {
-           return $user['id'] === $id;
-        });
+        $query = "SELECT * FROM users WHERE id=:id";
+        $queryParams = ['id' => $id];
+
+        $res = $this->db->pdo->prepare($query);
+        $res->execute($queryParams);
+        return $res->fetchAll();
+
+        return $res;
     }
 }

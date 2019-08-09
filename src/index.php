@@ -1,47 +1,60 @@
 <?php
 
+use App\Base\DataBase;
 use App\Models\User;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Slim\App;
+use App\Middlewares\FilterMiddleware;
+use App\Middlewares\SortMiddleware;
+use App\Middlewares\SelectMiddleware;
+use App\Middlewares\ValidatorMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
+$configDb = require_once (ROOT . '/Config/db.php');
+
 
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
+        'configDb' => $configDb,
     ],
 ];
 
+
 $app = new App($config);
 
-$emptyResponse = function ($request, $response, $next)
-{
-    $response = $next($request, $response);
 
-    if (empty($response->getBody()->getContents())) {
-        $response = $response->withStatus(404);
-    }
+$container = $app->getContainer();
+$container['objectDataBase'] = function ($container) {
 
-    return $response;
+    $configDb = $container->get('settings')['configDb'];
+    $db = DataBase::getInstance($configDb);
+
+    return $db;
 };
 
-$app->add($emptyResponse);
 
-$app->get('/users', function (Request $request, Response $response) {
-
-    $result = (new User())->getUsers();
+$app->get('/{rout}', function (Request $request, Response $response, $args)
+{
+    $modelUser = (new User($this->get('objectDataBase')));
+    $modelUser->fetchQuery($request);
+    $result = $modelUser->getUsers();
 
     return $response->withJson($result);
-});
 
-$app->get('/users/{id}', function (Request $request, Response $response, $args) {
+})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorMiddleware());
 
+
+$app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
+{
     $id = filter_var($args['id'], FILTER_VALIDATE_INT);
-    $result = (new User())->getUser($id);
+    $modelUser = (new User($this->get('objectDataBase')));
+    $result = $modelUser->getUser($id);
 
     return $response->withJson($result);
 });
+
 
 $app->run();
