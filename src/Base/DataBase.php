@@ -4,7 +4,7 @@ namespace App\Base;
 
 class DataBase
 {
-    public $pdo;
+    private $pdo;
     private static $dbInstance;
 
     private function __construct(array $config=null)
@@ -33,5 +33,12 @@ class DataBase
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
         $this->pdo = new \PDO($dsn, $user, $password, $options);
+    }
+
+    public function executeQuery($query, $queryParams)
+    {
+       $res = $this->pdo->prepare($query);
+       $res->execute($queryParams);
+       return $res->fetchAll();
     }
 }
