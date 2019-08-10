@@ -16,10 +16,8 @@ class User extends BaseModel
 
     public function getUsers()
     {
-        $res = $this->db->pdo->prepare($this->query);
-        $res->execute($this->queryParams);
-
-        return $res->fetchAll();
+        $res = $this->db->executeQuery($this->query, $this->queryParams);
+        return $res;
     }
 
     public function getUser(int $id)
@@ -27,10 +25,8 @@ class User extends BaseModel
         $query = "SELECT * FROM users WHERE id=:id";
         $queryParams = ['id' => $id];
 
-        $res = $this->db->pdo->prepare($query);
-        $res->execute($queryParams);
-        return $res->fetchAll();
-
+        $res = $this->db->executeQuery($query, $queryParams);
         return $res;
+
     }
 }

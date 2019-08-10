@@ -8,7 +8,8 @@ use Slim\App;
 use App\Middlewares\FilterMiddleware;
 use App\Middlewares\SortMiddleware;
 use App\Middlewares\SelectMiddleware;
-use App\Middlewares\ValidatorMiddleware;
+use App\Middlewares\ValidatorQueryParamsKeyMiddleware;
+use App\Middlewares\ValidatorQueryParamsNameMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
@@ -44,7 +45,7 @@ $app->get('/{rout}', function (Request $request, Response $response, $args)
 
     return $response->withJson($result);
 
-})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorMiddleware());
+})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorQueryParamsKeyMiddleware())->add(new ValidatorQueryParamsNameMiddleware());
 
 
 $app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
