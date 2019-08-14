@@ -40,9 +40,11 @@ $container['objectDataBase'] = function ($container) {
 
 $app->get('/{rout}', function (Request $request, Response $response, $args)
 {
-    $modelUser = (new User($this->get('objectDataBase')));
-    $modelUser->fetchQuery($request);
-    $result = $modelUser->getUsers();
+    $db = $this->get('objectDataBase');
+
+    $query = $request->getAttribute('query');
+    $queryParams = $request->getAttribute('queryParams');
+    $result = $db->executeQuery($query, $queryParams);
 
     return $response->withJson($result);
 

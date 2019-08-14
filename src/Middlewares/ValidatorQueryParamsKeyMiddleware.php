@@ -23,7 +23,13 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
     private function validateQueryParamsKeys($request)
     {
         $queryParams = $request->getQueryParams();
-        $fields = User::getFields();
+        $arrRout = (explode('/',  $request->getUri()->getPath()));
+        $modelName = 'App\Models\\' . ucfirst(substr($arrRout[1], 0,-1));
+
+//        $modelName = $request->getAttribute('modelName');
+//        var_dump($modelName);
+//        die;
+        $fields = $modelName::getFields();
 
         $notValidParams = [];
         foreach ($queryParams as $params) {
