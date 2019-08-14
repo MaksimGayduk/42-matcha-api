@@ -25,14 +25,9 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
     {
         $queryParams = $request->getQueryParams();
         $arrRout = (explode('/',  $request->getUri()->getPath()));
-//        $modelName = 'App\Models\\' . ucfirst(substr($arrRout[1], 0,-1));
-//        $fields = $modelName::getFields();
 
         $entity = $arrRout[1];
         $fields = Entities::getFieldsEntities($entity);
-//        var_dump($fields);
-//        die;
-
 
         $notValidParams = [];
         foreach ($queryParams as $params) {

@@ -51,24 +51,20 @@ $app->get('/{rout}', function (Request $request, Response $response, $args)
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
 
-
     return $response->withJson($result) ;
-
-
 })->add(new OutputFormatterMiddleware())->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorQueryParamsKeyMiddleware())->add(new ValidatorQueryParamsNameMiddleware());
 
 
 $app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
 {
-    $id = filter_var($args['id'], FILTER_VALIDATE_INT);
-    $modelUser = (new User($this->get('objectDataBase')));
+    $db = $this->get('objectDataBase');
 
-
-    $modelUser->fetchQuery($request);
-    $result = $modelUser->getUser();
+    $query = $request->getAttribute('query');
+    $queryParams = $request->getAttribute('queryParams');
+    $result = $db->executeQuery($query, $queryParams);
 
     return $response->withJson($result);
-})->add(new WhereMiddleware())->add(new SelectMiddleware());
+})->add(new OutputFormatterMiddleware())->add(new WhereMiddleware())->add(new SelectMiddleware());
 
 
 $app->run();
