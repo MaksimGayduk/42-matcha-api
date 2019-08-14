@@ -12,7 +12,7 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
 
         if($notValidQueryParamsKeys) {
             $errors = array("errors" => array("status" => "422 Unprocessable Entity", "title" => "The parameter_name [${notValidQueryParamsKeys}] does not exist"));
-            $response->withJson($errors, 422);
+            $response = $response->withJson($errors, 422);
             return $response;
         }
 

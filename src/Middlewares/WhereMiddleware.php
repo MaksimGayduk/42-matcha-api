@@ -1,18 +1,22 @@
 <?php
 
+
 namespace App\Middlewares;
 
-class SelectMiddleware
+
+class WhereMiddleware
 {
     public function __invoke($request, $response, $next)
     {
         $arrRout = (explode('/',  $request->getUri()->getPath()));
-        $tableName = $arrRout[1];
+        $id = filter_var($arrRout[2], FILTER_VALIDATE_INT);
 
-        $query = 'SELECT * FROM ' . $tableName;
+        $query = $request->getAttribute('query');
+        $query .= " WHERE id=:id";
+        $queryParams = ['id' => $id];
 
         $request = $request->withAttribute('query', $query);
-        $request = $request->withAttribute('tableName', $tableName);
+        $request = $request->withAttribute('queryParams', $queryParams);
         $response = $next($request, $response);
 
         return $response;

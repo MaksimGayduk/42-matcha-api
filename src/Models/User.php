@@ -17,16 +17,18 @@ class User extends BaseModel
     public function getUsers()
     {
         $res = $this->db->executeQuery($this->query, $this->queryParams);
-        return $res;
+
+        $data = $this->prepareData($res);
+        return ($data);
+
     }
 
-    public function getUser(int $id)
+    public function getUser()
     {
-        $query = "SELECT * FROM users WHERE id=:id";
-        $queryParams = ['id' => $id];
+        $res = $this->db->executeQuery($this->query, $this->queryParams);
 
-        $res = $this->db->executeQuery($query, $queryParams);
-        return $res;
+        $data = $this->prepareData($res);
+        return ($data);
 
     }
 }

@@ -9,7 +9,7 @@ class DataBase
 
     private function __construct(array $config=null)
     {
-        $this->getConnection($config);
+        $this->pdo = $this->getConnection($config);
     }
 
     public static function getInstance($config): DataBase
@@ -19,7 +19,7 @@ class DataBase
         return self::$dbInstance;
     }
 
-    private function getConnection(array $config=null): void
+    private function getConnection(array $config=null): \PDO
     {
         $driver     = $config['driver'];
         $host       = $config['host'];
@@ -32,7 +32,7 @@ class DataBase
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             \PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-        $this->pdo = new \PDO($dsn, $user, $password, $options);
+        return (new \PDO($dsn, $user, $password, $options));
     }
 
     public function executeQuery($query, $queryParams)

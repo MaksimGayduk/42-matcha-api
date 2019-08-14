@@ -10,6 +10,7 @@ use App\Middlewares\SortMiddleware;
 use App\Middlewares\SelectMiddleware;
 use App\Middlewares\ValidatorQueryParamsKeyMiddleware;
 use App\Middlewares\ValidatorQueryParamsNameMiddleware;
+use App\Middlewares\WhereMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
@@ -52,10 +53,13 @@ $app->get('/{rout}/{id}', function (Request $request, Response $response, $args)
 {
     $id = filter_var($args['id'], FILTER_VALIDATE_INT);
     $modelUser = (new User($this->get('objectDataBase')));
-    $result = $modelUser->getUser($id);
+
+
+    $modelUser->fetchQuery($request);
+    $result = $modelUser->getUser();
 
     return $response->withJson($result);
-});
+})->add(new WhereMiddleware())->add(new SelectMiddleware());
 
 
 $app->run();
