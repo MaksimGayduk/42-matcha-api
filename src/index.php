@@ -11,11 +11,16 @@ use App\Middlewares\SelectMiddleware;
 use App\Middlewares\ValidatorQueryParamsKeyMiddleware;
 use App\Middlewares\ValidatorQueryParamsNameMiddleware;
 use App\Middlewares\WhereMiddleware;
+use App\Middlewares\OutputFormatterMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 $configDb = require_once (ROOT . '/Config/db.php');
+$entities = require_once (ROOT . '/Config/entities.php');
 
+//var_dump(array_keys($entities));
+//var_dump(array_column($entities, 'users'));
+//die;
 
 $config = [
     'settings' => [
@@ -46,9 +51,11 @@ $app->get('/{rout}', function (Request $request, Response $response, $args)
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
 
-    return $response->withJson($result);
 
-})->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorQueryParamsKeyMiddleware())->add(new ValidatorQueryParamsNameMiddleware());
+    return $response->withJson($result) ;
+
+
+})->add(new OutputFormatterMiddleware())->add(new SortMiddleware())->add(new FilterMiddleware())->add(new SelectMiddleware())->add(new ValidatorQueryParamsKeyMiddleware())->add(new ValidatorQueryParamsNameMiddleware());
 
 
 $app->get('/{rout}/{id}', function (Request $request, Response $response, $args)

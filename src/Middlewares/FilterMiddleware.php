@@ -38,11 +38,11 @@ class FilterMiddleware
                 $arrNewValues = explode(',', $value);
                 $prepareString = '';
                 $count = count($arrNewValues) - 1;
-                foreach ($arrNewValues as $value){
+                foreach ($arrNewValues as $value) {
                     $prepareKey = $key . '_' . $value;
                     $prepareString .= ":${prepareKey}";
                     $filters[$prepareKey] = $value;
-                    if($count--){
+                    if($count--) {
                         $prepareString .= ',';
                     }
                 }
@@ -50,7 +50,6 @@ class FilterMiddleware
             } else {
                 $query .= " ${key}=:${key}";
             }
-
             if ($shouldSeparate--) {
                 $query .= " AND";
             }

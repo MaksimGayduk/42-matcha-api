@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Config\Entities;
 use App\Models\User;
 
 class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
@@ -24,12 +25,14 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
     {
         $queryParams = $request->getQueryParams();
         $arrRout = (explode('/',  $request->getUri()->getPath()));
-        $modelName = 'App\Models\\' . ucfirst(substr($arrRout[1], 0,-1));
+//        $modelName = 'App\Models\\' . ucfirst(substr($arrRout[1], 0,-1));
+//        $fields = $modelName::getFields();
 
-//        $modelName = $request->getAttribute('modelName');
-//        var_dump($modelName);
+        $entity = $arrRout[1];
+        $fields = Entities::getFieldsEntities($entity);
+//        var_dump($fields);
 //        die;
-        $fields = $modelName::getFields();
+
 
         $notValidParams = [];
         foreach ($queryParams as $params) {
