@@ -12,7 +12,12 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
         $notValidQueryParamsKeys = $this->validateQueryParamsKeys($request);
 
         if($notValidQueryParamsKeys) {
-            $errors = array("errors" => array("status" => "422 Unprocessable Entity", "title" => "The parameter_name [${notValidQueryParamsKeys}] does not exist"));
+            $errors = [
+                "errors" => [
+                    "status" => "422 Unprocessable Entity",
+                    "title" => "The parameter_Key [${notValidQueryParamsKeys}] does not exist"
+                ]
+            ];
             $response = $response->withJson($errors, 422);
             return $response;
         }
@@ -24,9 +29,7 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
     private function validateQueryParamsKeys($request)
     {
         $queryParams = $request->getQueryParams();
-        $arrRout = (explode('/',  $request->getUri()->getPath()));
-
-        $entity = $arrRout[1];
+        $entity = (explode('/',  $request->getUri()->getPath()))[1];;
         $fields = Entities::getFieldsEntities($entity);
 
         $notValidParams = [];

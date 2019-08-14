@@ -22,8 +22,12 @@ class Entities
         ],
     ];
 
-    public static function getFieldsEntities(string $entity): array
+    public static function getFieldsEntities(string $entity): ?array
     {
+        if (!key_exists($entity, self::$entities)) {
+            return null;
+        }
+
         return self::$entities[$entity];
     }
 }

@@ -9,7 +9,12 @@ class ValidatorQueryParamsNameMiddleware extends BaseMiddleware
         $notValidQueryParamsNames = $this->validateQueryParamsNames($request);
 
         if($notValidQueryParamsNames) {
-            $errors = array("errors" => array("status" => "422 Unprocessable Entity", "title" => "The parameter_name [${notValidQueryParamsNames}] does not exist"));
+            $errors = [
+                "errors" => [
+                    "status" => "422 Unprocessable Entity",
+                    "title" => "The parameter_Name [${notValidQueryParamsNames}] does not exist"
+                ]
+            ];
             $response = $response->withJson($errors, 422);
             return $response;
         }

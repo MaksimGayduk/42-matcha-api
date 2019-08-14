@@ -10,28 +10,29 @@ class OutputFormatterMiddleware
     {
         $response = $next($request, $response);
 
-        $tableName = $request->getAttribute('tableName');
+        $entity = $request->getAttribute('entity');
         $res = json_decode($response->getBody()->__toString(), true);
-        $data = $this->prepareData($res, $tableName);
+        $data = $this->prepareData($res, $entity);
 
         return $response->withJson($data);
     }
 
-    private function prepareData($res, $tableName)
+    private function prepareData($res, $entity)
     {
         foreach ($res as $item) {
             $data['data'][] = [
-                "type" => $tableName,
+                "type" => $entity,
                 "id" => $item['id'],
                 'attributes' =>
                     array_filter($item, function($key) {
                         return $key != 'id';
                     }, ARRAY_FILTER_USE_KEY),
                 'links' => [
-                    'self' => $tableName . '/' . $item['id']
+                    'self' => $entity . '/' . $item['id']
                 ]
             ];
         }
-        return $data;
+
+        return $data ?? [];
     }
 }

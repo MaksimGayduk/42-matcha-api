@@ -6,13 +6,12 @@ class SelectMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $arrRout = (explode('/',  $request->getUri()->getPath()));
-        $tableName = $arrRout[1];
+        $entity = (explode('/',  $request->getUri()->getPath()))[1];
 
-        $query = 'SELECT * FROM ' . $tableName;
+        $query = 'SELECT * FROM ' . $entity;
 
         $request = $request->withAttribute('query', $query);
-        $request = $request->withAttribute('tableName', $tableName);
+        $request = $request->withAttribute('entity', $entity);
         $response = $next($request, $response);
 
         return $response;
