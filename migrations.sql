@@ -9,3 +9,16 @@ insert into users (login, first_name, last_name, age) VALUES ('test7', 'fn7', 'l
 insert into users (login, first_name, last_name, age) VALUES ('test8', 'fn8', 'ln8', 8);
 insert into users (login, first_name, last_name, age) VALUES ('test9', 'fn9', 'ln9', 9);
 insert into users (login, first_name, last_name, age) VALUES ('test10', 'fn10', 'ln10', 10);
+
+create table comments (id SERIAL PRIMARY KEY, users_id INT REFERENCES users (id), text VARCHAR(100), date_create timestamp);
+insert into comments (users_id, text, date_create) VALUES (1, 'some text 1', now());
+insert into comments (users_id, text, date_create) VALUES (1, 'some text 1', now());
+insert into comments (users_id, text, date_create) VALUES (1, 'some text 1', now());
+insert into comments (users_id, text, date_create) VALUES (2, 'some text 1', now());
+insert into comments (users_id, text, date_create) VALUES (2, 'some text 1', now());
+
+create table likes(id SERIAL PRIMARY KEY, users_id INT REFERENCES users (id), comments_id INT REFERENCES comments (id));
+insert into likes (users_id, comments_id) VALUES (1, 1);
+insert into likes (users_id, comments_id) VALUES (1, 1);
+insert into likes (users_id, comments_id) VALUES (2, 2);
+insert into likes (users_id, comments_id) VALUES (2, 2);

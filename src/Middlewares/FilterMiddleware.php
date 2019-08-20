@@ -11,7 +11,6 @@ class FilterMiddleware
         $filters = $params['filters'] ?? null;
 
         if ($filters) {
-
             [$filters, $query] = $this->prepareFilterQuery($filters, $query);
 
             $queryParams = $request->getAttribute('queryParams') ?? [];
@@ -22,7 +21,6 @@ class FilterMiddleware
         }
 
         $response = $next($request, $response);
-
 
         return $response;
     }
@@ -38,11 +36,11 @@ class FilterMiddleware
                 $arrNewValues = explode(',', $value);
                 $prepareString = '';
                 $count = count($arrNewValues) - 1;
-                foreach ($arrNewValues as $value){
+                foreach ($arrNewValues as $value) {
                     $prepareKey = $key . '_' . $value;
                     $prepareString .= ":${prepareKey}";
                     $filters[$prepareKey] = $value;
-                    if($count--){
+                    if ($count--) {
                         $prepareString .= ',';
                     }
                 }
@@ -50,7 +48,6 @@ class FilterMiddleware
             } else {
                 $query .= " ${key}=:${key}";
             }
-
             if ($shouldSeparate--) {
                 $query .= " AND";
             }
