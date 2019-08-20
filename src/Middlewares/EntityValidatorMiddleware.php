@@ -6,14 +6,14 @@ namespace App\Middlewares;
 
 use App\Config\Entities;
 
-class ValidatorEntityMiddleware
+class EntityValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
         $entityName = (explode('/',  $request->getUri()->getPath()))[1];
         $entity = Entities::getFieldsEntities($entityName);
 
-        if(empty($entity)) {
+        if (empty($entity)) {
             $errors = [
                 "errors" => [
                     "status" => "422 Unprocessable Entity",

@@ -4,7 +4,7 @@ namespace App\Middlewares;
 
 use App\Config\Entities;
 
-class ValidatorQueryParamsNameMiddleware extends BaseMiddleware
+class QueryParamsNameValidatorMiddleware extends BaseMiddleware
 {
     public function __invoke($request, $response, $next)
     {

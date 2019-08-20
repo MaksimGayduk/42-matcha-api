@@ -6,7 +6,7 @@ use App\Base\BaseException;
 use App\Config\Entities;
 use App\Models\User;
 
-class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
+class QueryParamsKeyValidatorMiddleware extends BaseMiddleware
 {
     public function __invoke($request, $response, $next)
     {
@@ -40,7 +40,12 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
         }
     }
 
-    private function validateStringParams(string $paramsKey, string $paramsValue, string $mainEntityName, array $attributes): void
+    private function validateStringParams(
+        string $paramsKey,
+        string $paramsValue,
+        string $mainEntityName,
+        array $attributes
+    ): void
     {
         $paramsValue = explode(',', (str_replace('-', '', $paramsValue)));
         if ($paramsKey === 'includes') {

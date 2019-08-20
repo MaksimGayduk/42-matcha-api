@@ -40,7 +40,7 @@ class FilterMiddleware
                     $prepareKey = $key . '_' . $value;
                     $prepareString .= ":${prepareKey}";
                     $filters[$prepareKey] = $value;
-                    if($count--) {
+                    if ($count--) {
                         $prepareString .= ',';
                     }
                 }
