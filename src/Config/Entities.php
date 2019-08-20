@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Config;
-
 
 class Entities
 {
@@ -20,6 +18,29 @@ class Entities
             'text' => 'string',
             'data_create' => 'timestamp',
         ],
+        'likes' => [
+            'id' => 'int',
+            'users_id' => 'int',
+            'comments_id' => 'int',
+        ],
+        'title_hashes' => [
+            'id' => 'int',
+            'title' => 'string',
+        ],
+        'hashes' => [
+            'id' => 'int',
+            'title_hashes_id' => 'id',
+            'users_id' => 'id',
+        ],
+    ];
+
+    private static $relationship = [
+        'users' => [
+            'comments',
+            'likes',
+        ],
+
+        'comments' => [ 'likes' ],
     ];
 
     public static function getFieldsEntities(string $entity): ?array
@@ -29,5 +50,15 @@ class Entities
         }
 
         return self::$entities[$entity];
+    }
+
+    public static function getEntitiesNames(): ?array
+    {
+        return array_keys(self::$entities);
+    }
+
+    public static function hasRelationship(string $mainEntityName, string $relationEntityName): bool
+    {
+        return in_array($relationEntityName, self::$relationship[$mainEntityName]);
     }
 }

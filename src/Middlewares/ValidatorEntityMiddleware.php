@@ -6,7 +6,7 @@ namespace App\Middlewares;
 
 use App\Config\Entities;
 
-class ValidatorRoutMiddleware
+class ValidatorEntityMiddleware
 {
     public function __invoke($request, $response, $next)
     {

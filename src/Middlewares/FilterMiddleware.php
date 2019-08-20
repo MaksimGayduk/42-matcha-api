@@ -11,7 +11,6 @@ class FilterMiddleware
         $filters = $params['filters'] ?? null;
 
         if ($filters) {
-
             [$filters, $query] = $this->prepareFilterQuery($filters, $query);
 
             $queryParams = $request->getAttribute('queryParams') ?? [];
@@ -22,7 +21,6 @@ class FilterMiddleware
         }
 
         $response = $next($request, $response);
-
 
         return $response;
     }

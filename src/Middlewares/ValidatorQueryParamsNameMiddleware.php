@@ -2,17 +2,19 @@
 
 namespace App\Middlewares;
 
+use App\Config\Entities;
+
 class ValidatorQueryParamsNameMiddleware extends BaseMiddleware
 {
     public function __invoke($request, $response, $next)
     {
         $notValidQueryParamsNames = $this->validateQueryParamsNames($request);
 
-        if($notValidQueryParamsNames) {
+        if ($notValidQueryParamsNames) {
             $errors = [
                 "errors" => [
                     "status" => "422 Unprocessable Entity",
-                    "title" => "The parameter_Name [${notValidQueryParamsNames}] does not exist"
+                    "title" => "The parameter name [${notValidQueryParamsNames}] does not exist"
                 ]
             ];
             $response = $response->withJson($errors, 422);
@@ -20,6 +22,7 @@ class ValidatorQueryParamsNameMiddleware extends BaseMiddleware
         }
 
         $response = $next($request, $response);
+
         return $response;
     }
 
@@ -27,15 +30,15 @@ class ValidatorQueryParamsNameMiddleware extends BaseMiddleware
     {
         $paramsCmpKeys = [
             'filters' => 'filters',
-            'sort' => 'filters'
+            'sort' => 'sort',
+            'includes' => 'includes'
         ];
 
         $params = $request->getQueryParams();
-        $notValidParams = [];
-        $notValidParams = $this->checkExistKey($params, $paramsCmpKeys, $notValidParams);
+        $notValidParams = array_diff_key($params, $paramsCmpKeys);
 
-        if(!empty($notValidParams))
-            $notValidParams = implode(',', $notValidParams);
+        if (!empty($notValidParams))
+            $notValidParams = implode(',', array_keys($notValidParams));
         return $notValidParams ?? null;
     }
 }

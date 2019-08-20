@@ -11,12 +11,15 @@ use App\Middlewares\ValidatorQueryParamsKeyMiddleware;
 use App\Middlewares\ValidatorQueryParamsNameMiddleware;
 use App\Middlewares\WhereMiddleware;
 use App\Middlewares\OutputFormatterMiddleware;
-use App\Middlewares\ValidatorRoutMiddleware;
+use App\Middlewares\ValidatorEntityMiddleware;
+use App\Middlewares\IncludeMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 $configDb = require_once (ROOT . '/Config/db.php');
-$entities = require_once (ROOT . '/Config/entities.php');
+
+//phpinfo();
+//die;
 
 $config = [
     'settings' => [
@@ -28,6 +31,20 @@ $config = [
 $app = new App($config);
 
 $container = $app->getContainer();
+
+$container['errorHandler'] = function () {
+    return function ($request, $response, $exception) {
+        $errors = [
+            "errors" => [
+                "status" => $exception->getStatus(),
+                "title" => $exception->getMessage(),
+            ]
+        ];
+
+        return $response->withJson($errors, $exception->getCode());
+    };
+};
+
 $container['objectDataBase'] = function ($container) {
 
     $configDb = $container->get('settings')['configDb'];
@@ -35,6 +52,7 @@ $container['objectDataBase'] = function ($container) {
 
     return $db;
 };
+
 
 $app->get('/{entity}', function (Request $request, Response $response, $args)
 {
@@ -44,15 +62,17 @@ $app->get('/{entity}', function (Request $request, Response $response, $args)
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
 
+
     return $response->withJson($result) ;
 })
+    ->add(new IncludeMiddleware($container['objectDataBase']))
     ->add(new OutputFormatterMiddleware())
     ->add(new SortMiddleware())
     ->add(new FilterMiddleware())
     ->add(new SelectMiddleware())
     ->add(new ValidatorQueryParamsKeyMiddleware())
     ->add(new ValidatorQueryParamsNameMiddleware())
-    ->add(new ValidatorRoutMiddleware());
+    ->add(new ValidatorEntityMiddleware());
 
 
 $app->get('/{entity}/{id}', function (Request $request, Response $response, $args)
@@ -63,11 +83,14 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
 
+
+
     return $response->withJson($result);
 })
     ->add(new OutputFormatterMiddleware())
     ->add(new WhereMiddleware())
     ->add(new SelectMiddleware())
-    ->add(new ValidatorRoutMiddleware());
+    ->add(new ValidatorEntityMiddleware());
 
 $app->run();
+

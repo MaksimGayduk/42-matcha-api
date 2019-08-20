@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Base\BaseException;
 use App\Config\Entities;
 use App\Models\User;
 
@@ -9,43 +10,63 @@ class ValidatorQueryParamsKeyMiddleware extends BaseMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $notValidQueryParamsKeys = $this->validateQueryParamsKeys($request);
-
-        if($notValidQueryParamsKeys) {
-            $errors = [
-                "errors" => [
-                    "status" => "422 Unprocessable Entity",
-                    "title" => "The parameter_Key [${notValidQueryParamsKeys}] does not exist"
-                ]
-            ];
-            $response = $response->withJson($errors, 422);
-            return $response;
-        }
+        $this->validateQueryParamsKeys($request, $response);
 
         $response = $next($request, $response);
+
         return $response;
     }
 
-    private function validateQueryParamsKeys($request)
+    private function validateQueryParamsKeys($request): void
     {
         $queryParams = $request->getQueryParams();
-        $entity = (explode('/',  $request->getUri()->getPath()))[1];;
-        $fields = Entities::getFieldsEntities($entity);
+        $mainEntityName = (explode('/',  $request->getUri()->getPath()))[1];;
+        $attributes = Entities::getFieldsEntities($mainEntityName);
 
-        $notValidParams = [];
-        foreach ($queryParams as $params) {
-            if(is_array($params)) {
-                $notValidParams = $this->checkExistKey($params, $fields, $notValidParams);
+        foreach ($queryParams as $paramsKey => $paramsValue) {
+            if (is_array($paramsValue)) {
+                $this->validateArrayParams($paramsValue, $attributes);
             } else {
-                $params = str_ireplace('-', '', $params);
-                $params = array_flip(explode(',', $params));
-                $notValidParams = $this->checkExistKey($params, $fields, $notValidParams);
+                $this->validateStringParams($paramsKey,  $paramsValue,  $mainEntityName,  $attributes);
             }
         }
+    }
 
-        if(!empty($notValidParams))
-            $notValidParams = implode(', ', $notValidParams);
+    private function validateArrayParams(array $paramsValue, array $attributes): void
+    {
+        $notValidParams =  implode(', ', (array_diff(array_keys($paramsValue), array_keys($attributes))));
+        if ($notValidParams !== "") {
+            $this->throwException("The parameter key [{$notValidParams}] does not exist");
+        }
+    }
 
-        return $notValidParams ?? null;
+    private function validateStringParams(string $paramsKey, string $paramsValue, string $mainEntityName, array $attributes): void
+    {
+        $paramsValue = explode(',', (str_replace('-', '', $paramsValue)));
+        if ($paramsKey === 'includes') {
+            $entitiesNames = Entities::getEntitiesNames();
+            $notValidParams = implode(', ', array_diff($paramsValue, $entitiesNames));
+            if ($notValidParams) {
+                $this->throwException("The parameter key [{$notValidParams}] does not exist");
+
+            }
+            foreach ($paramsValue as $param) {
+                if (!Entities::hasRelationship($mainEntityName , $param) && $param !== '') {
+                    $this->throwException("The relationship (includes) [{$mainEntityName} to {$param}] does not exist");
+                }
+            }
+        }
+        $notValidParams = implode(', ', array_diff($paramsValue, array_keys($attributes)));
+        if ($notValidParams) {
+            $this->throwException("The parameter key [{$notValidParams}] does not exist");
+        }
+    }
+
+    private function throwException(string $message): void
+    {
+        throw new BaseException(
+            $message,
+            422,
+            "Unprocessable Entity");
     }
 }
