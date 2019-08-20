@@ -18,9 +18,6 @@ define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
 $configDb = require_once (ROOT . '/Config/db.php');
 
-//phpinfo();
-//die;
-
 $config = [
     'settings' => [
         'displayErrorDetails' => true,
@@ -93,4 +90,3 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
     ->add(new ValidatorEntityMiddleware());
 
 $app->run();
-
