@@ -4,7 +4,9 @@
 namespace App\Middlewares;
 
 
-class WhereMiddleware
+use App\Base\SqlQueryBuilder;
+
+class SingleEntityWhereMiddleware
 {
     public function __invoke($request, $response, $next)
     {
@@ -12,8 +14,8 @@ class WhereMiddleware
         $id = filter_var($arrRout[2], FILTER_VALIDATE_INT);
 
         $query = $request->getAttribute('query');
-        $query .= " WHERE id=:id";
         $queryParams = ['id' => $id];
+        $query .= SqlQueryBuilder::where($queryParams);
 
         $request = $request->withAttribute('query', $query);
         $request = $request->withAttribute('queryParams', $queryParams);

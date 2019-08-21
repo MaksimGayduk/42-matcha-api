@@ -19,15 +19,15 @@ class SortMiddleware
         return $response;
     }
 
-    private function prepareSortQuery($query, $sort)
+    private function prepareSortQuery(string $query, string $sort): string
     {
         $arrColumnsSort = explode(',', $sort);
         $shouldSeparate = count($arrColumnsSort) - 1;
         $query .= ' ORDER BY';
         foreach ($arrColumnsSort as $column) {
             $order = $this->getOrder($column);
-            $column = $order == 'DESC' ? substr($column, 1) : $column;
-            $query .= " ${column} ${order}";
+            $column = ($order == 'DESC') ? substr($column, 1) : $column;
+            $query .= " {$column} {$order}";
             if ($shouldSeparate--) {
                 $query .= ",";
             }
@@ -36,7 +36,7 @@ class SortMiddleware
         return $query;
     }
 
-    private function getOrder($column)
+    private function getOrder(string $column): string
     {
         return $column[0] === '-' ? 'DESC' : 'ASC';
     }

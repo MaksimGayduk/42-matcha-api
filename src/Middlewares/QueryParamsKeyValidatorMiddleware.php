@@ -5,8 +5,9 @@ namespace App\Middlewares;
 use App\Base\BaseException;
 use App\Config\Entities;
 use App\Models\User;
+use Slim\Http\Request;
 
-class QueryParamsKeyValidatorMiddleware extends BaseMiddleware
+class QueryParamsKeyValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
@@ -17,7 +18,7 @@ class QueryParamsKeyValidatorMiddleware extends BaseMiddleware
         return $response;
     }
 
-    private function validateQueryParamsKeys($request): void
+    private function validateQueryParamsKeys(Request $request): void
     {
         $queryParams = $request->getQueryParams();
         $mainEntityName = (explode('/',  $request->getUri()->getPath()))[1];;
@@ -34,7 +35,7 @@ class QueryParamsKeyValidatorMiddleware extends BaseMiddleware
 
     private function validateArrayParams(array $paramsValue, array $attributes): void
     {
-        $notValidParams =  implode(', ', (array_diff(array_keys($paramsValue), array_keys($attributes))));
+        $notValidParams = implode(', ', (array_diff(array_keys($paramsValue), array_keys($attributes))));
         if ($notValidParams !== "") {
             $this->throwException("The parameter key [{$notValidParams}] does not exist");
         }
@@ -60,10 +61,11 @@ class QueryParamsKeyValidatorMiddleware extends BaseMiddleware
                     $this->throwException("The relationship (includes) [{$mainEntityName} to {$param}] does not exist");
                 }
             }
-        }
-        $notValidParams = implode(', ', array_diff($paramsValue, array_keys($attributes)));
-        if ($notValidParams) {
-            $this->throwException("The parameter key [{$notValidParams}] does not exist");
+        } else {
+            $notValidParams = implode(', ', array_diff($paramsValue, array_keys($attributes)));
+            if ($notValidParams) {
+                $this->throwException("The parameter key [{$notValidParams}] does not exist");
+            }
         }
     }
 
