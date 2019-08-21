@@ -14,7 +14,6 @@ class SqlQueryBuilder
 
     public static function where(array $filters): string
     {
-
         $shouldSeparate = count($filters) - 1;
         $query = ' WHERE';
 
@@ -40,5 +39,4 @@ class SqlQueryBuilder
 
         return $query;
     }
-
 }

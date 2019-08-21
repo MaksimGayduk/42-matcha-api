@@ -67,7 +67,6 @@ class QueryParamsKeyValidatorMiddleware
                 $this->throwException("The parameter key [{$notValidParams}] does not exist");
             }
         }
-
     }
 
     private function throwException(string $message): void

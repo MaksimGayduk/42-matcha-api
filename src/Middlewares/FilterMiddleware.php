@@ -23,24 +23,19 @@ class FilterMiddleware
         $query .= SqlQueryBuilder::where($filters);
         $filters = ArrayHelper::unnest($filters);
 
-
         $queryParams = $request->getAttribute('queryParams') ?? [];
         $queryParams = array_merge($queryParams, $filters);
 
         $request = $request->withAttribute('query', $query);
         $request = $request->withAttribute('queryParams', $queryParams);
 
-
         $response = $next($request, $response);
 
         return $response;
     }
 
-
-
     private function prepareFilterData(array $filters): array
     {
-
         $res = [];
         foreach ($filters as $key => $value) {
             if (strstr($value, ',')) {

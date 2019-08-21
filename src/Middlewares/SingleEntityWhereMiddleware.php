@@ -17,9 +17,6 @@ class SingleEntityWhereMiddleware
         $queryParams = ['id' => $id];
         $query .= SqlQueryBuilder::where($queryParams);
 
-//        var_dump($query);
-//        die;
-
         $request = $request->withAttribute('query', $query);
         $request = $request->withAttribute('queryParams', $queryParams);
         $response = $next($request, $response);

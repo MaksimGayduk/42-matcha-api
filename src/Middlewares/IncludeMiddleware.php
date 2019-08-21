@@ -25,8 +25,8 @@ class IncludeMiddleware
         $mainEntityName = $request->getAttribute('entity');
         $data = json_decode($response->getBody()->__toString(), true);
         $result = $this->prepareResponse($includes, $mainEntityName, $data);
-        return $response->withJson($result);
 
+        return $response->withJson($result);
     }
 
     private function prepareResponse(string $includes, string $mainEntityName, array $data): array

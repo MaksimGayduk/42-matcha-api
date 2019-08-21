@@ -18,5 +18,4 @@ class SelectMiddleware
 
         return $response;
     }
-
 }
