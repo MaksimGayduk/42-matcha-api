@@ -2,6 +2,8 @@
 
 namespace App\Config;
 
+use App\Helpers\ArrayHelper;
+
 class Entities
 {
     private static $entities = [
@@ -43,13 +45,20 @@ class Entities
         'comments' => [ 'likes' ],
     ];
 
+    private static $paramsNames = [
+            'filters',
+            'sort',
+            'includes'
+    ];
+
     public static function getFieldsEntities(string $entity): ?array
     {
-        if (!key_exists($entity, self::$entities)) {
-            return null;
-        }
+        return ArrayHelper::get(self::$entities, $entity);
+    }
 
-        return self::$entities[$entity];
+    public static function getParamsNames()
+    {
+        return self::$paramsNames;
     }
 
     public static function getEntitiesNames(): ?array

@@ -2,7 +2,7 @@
 
 namespace App\Middlewares;
 
-class OutputFormatterMiddleware extends BaseMiddleware
+class OutputFormatterMiddleware
 {
     public function __invoke($request, $response, $next)
     {
@@ -34,24 +34,6 @@ class OutputFormatterMiddleware extends BaseMiddleware
         return $data ?? [];
     }
 
-    private function formatRelationships(array $mainEntity): array
-    {
-        $res = [];
-        if (!isset($mainEntity['includes'])) {
-            return $res;
-        }
-        foreach ($mainEntity['includes'] as $includesEntityName => $includesEntities) {
-            foreach ($includesEntities as $includesEntity) {
-                $res[$includesEntityName]['data'][] = [
-                    'id' => $includesEntity['id'],
-                    'type' => $includesEntityName,
-                ];
-            }
-        }
-
-        return $res;
-    }
-
     private function prepareData(array $mainEntity, string $mainEntityName): array
     {
         $res = [
@@ -66,6 +48,24 @@ class OutputFormatterMiddleware extends BaseMiddleware
                 'self' => $mainEntityName . '/' . $mainEntity['id']
             ]
         ];
+
+        return $res;
+    }
+
+    private function formatRelationships(array $mainEntity): array
+    {
+        $res = [];
+        if (!isset($mainEntity['includes'])) {
+            return $res;
+        }
+        foreach ($mainEntity['includes'] as $includesEntityName => $includesEntities) {
+            foreach ($includesEntities as $includesEntity) {
+                $res[$includesEntityName]['data'][] = [
+                    'id' => $includesEntity['id'],
+                    'type' => $includesEntityName,
+                ];
+            }
+        }
 
         return $res;
     }

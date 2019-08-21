@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\Middlewares;
 
-
+use App\Base\BaseException;
 use App\Config\Entities;
 
 class EntityValidatorMiddleware
@@ -14,16 +13,13 @@ class EntityValidatorMiddleware
         $entity = Entities::getFieldsEntities($entityName);
 
         if (empty($entity)) {
-            $errors = [
-                "errors" => [
-                    "status" => "422 Unprocessable Entity",
-                    "title" => "The Entity [${entityName}] does not exist"
-                ]
-            ];
-            $response = $response->withJson($errors, 422);
-
-            return $response;
+            throw new BaseException(
+                "The Entity [${entityName}] does not exist",
+                422,
+                "Unprocessable Entity"
+            );
         }
+
         $response = $next($request, $response);
 
         return $response;

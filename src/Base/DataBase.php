@@ -35,7 +35,7 @@ class DataBase
         return (new \PDO($dsn, $user, $password, $options));
     }
 
-    public function executeQuery($query, $queryParams)
+    public function executeQuery(string $query, array $queryParams = null): ?array
     {
        $res = $this->pdo->prepare($query);
        $res->execute($queryParams);

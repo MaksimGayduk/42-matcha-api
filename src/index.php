@@ -9,7 +9,7 @@ use App\Middlewares\SortMiddleware;
 use App\Middlewares\SelectMiddleware;
 use App\Middlewares\QueryParamsKeyValidatorMiddleware;
 use App\Middlewares\QueryParamsNameValidatorMiddleware;
-use App\Middlewares\WhereMiddleware;
+use App\Middlewares\SingleEntityWhereMiddleware;
 use App\Middlewares\OutputFormatterMiddleware;
 use App\Middlewares\EntityValidatorMiddleware;
 use App\Middlewares\IncludeMiddleware;
@@ -84,9 +84,12 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
 
     return $response->withJson($result);
 })
+    ->add(new IncludeMiddleware($container['objectDataBase']))
     ->add(new OutputFormatterMiddleware())
-    ->add(new WhereMiddleware())
+    ->add(new SingleEntityWhereMiddleware())
     ->add(new SelectMiddleware())
+    ->add(new QueryParamsKeyValidatorMiddleware())
+    ->add(new QueryParamsNameValidatorMiddleware())
     ->add(new EntityValidatorMiddleware());
 
 $app->run();
