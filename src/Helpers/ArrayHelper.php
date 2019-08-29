@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class ArrayHelper
 {
-    public static function get(array $arr, string $key)
+    public static function get(array $arr, string $key): ?array
     {
         if (!key_exists($key, $arr)) {
             return null;
@@ -28,5 +28,10 @@ class ArrayHelper
         }
 
         return $res;
+    }
+
+    public static function arrayDiffKeys(array $arr1, array $arr2): array
+    {
+       return (array_diff(array_keys($arr1), array_keys($arr2)));
     }
 }

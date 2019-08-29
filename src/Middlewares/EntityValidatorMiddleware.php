@@ -4,17 +4,18 @@ namespace App\Middlewares;
 
 use App\Base\BaseException;
 use App\Config\Entities;
+use App\Helpers\QueryHelper;
 
 class EntityValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $entityName = (explode('/',  $request->getUri()->getPath()))[1];
-        $entity = Entities::getFieldsEntities($entityName);
+        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $entityFields = Entities::getFieldsEntities($mainEntityName);
 
-        if (empty($entity)) {
+        if (empty($entityFields)) {
             throw new BaseException(
-                "The Entity [${entityName}] does not exist",
+                "The Entity [{$mainEntityName}] does not exist",
                 422,
                 "Unprocessable Entity"
             );
