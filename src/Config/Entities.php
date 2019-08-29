@@ -3,38 +3,78 @@
 namespace App\Config;
 
 use App\Helpers\ArrayHelper;
+use App\Validators\BooleanValidator;
+use App\Validators\DateValidator;
+use App\Validators\LengthValidator;
+use App\Validators\IntValidator;
+use App\Validators\EmailValidator;
+use App\Validators\PasswordValidator;
 
 class Entities
 {
     private static $entities = [
         'users' => [
-            'id' => 'int',
-            'login' => 'string',
-            'first_name' => 'string',
-            'last_name' => 'string',
-            'age' => 'int',
+            'id' => [
+                IntValidator::class => []
+            ],
+            'login' => [
+                LengthValidator::class => [
+                    'max' =>  12,
+                    'min' => 4,
+                ]
+            ],
+            'first_name' => [],
+            'last_name' => [],
+            'age' => [
+                IntValidator::class => []
+            ],
+            'password' => [
+                LengthValidator::class => [
+                    'max' =>  12,
+                    'min' => 8,
+                ],
+                PasswordValidator::class => [],
+            ],
+            'email' => [
+                EmailValidator::class => []
+            ],
+            'checked' => [
+                BooleanValidator::class => []
+            ],
+            'date_create' => [
+                DateValidator::class => [
+                    'format' => 'Y-m-d H:i:s',
+                ]
+            ],
         ],
         'comments' => [
-            'id' => 'int',
-            'users_id' => 'int',
-            'text' => 'string',
-            'data_create' => 'timestamp',
+            'id' => [
+                IntValidator::class => []
+            ],
+            'users_id' => [
+                IntValidator::class => []
+            ],
+            'text' => [],
+            'data_create' => [
+                DateValidator::class => [
+                    'format' => 'Y-m-d H:i:s',
+                ]
+            ],
         ],
         'likes' => [
-            'id' => 'int',
-            'users_id' => 'int',
-            'comments_id' => 'int',
-        ],
-        'title_hashes' => [
-            'id' => 'int',
-            'title' => 'string',
-        ],
-        'hashes' => [
-            'id' => 'int',
-            'title_hashes_id' => 'id',
-            'users_id' => 'id',
+            'id' => [
+                IntValidator::class => []
+            ],
+            'users_id' => [
+                IntValidator::class => []
+            ],
+            'comments_id' => [
+                IntValidator::class => []
+            ],
         ],
     ];
+
+
 
     private static $relationship = [
         'users' => [

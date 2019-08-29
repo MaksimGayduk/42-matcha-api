@@ -13,6 +13,7 @@ use App\Middlewares\SingleEntityWhereMiddleware;
 use App\Middlewares\OutputFormatterMiddleware;
 use App\Middlewares\EntityValidatorMiddleware;
 use App\Middlewares\IncludeMiddleware;
+use App\Middlewares\QueryParamsValueValidatorMiddleware;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
@@ -51,6 +52,7 @@ $container['objectDataBase'] = function ($container) {
 };
 
 
+
 $app->get('/{entity}', function (Request $request, Response $response, $args)
 {
     $db = $this->get('objectDataBase');
@@ -67,6 +69,7 @@ $app->get('/{entity}', function (Request $request, Response $response, $args)
     ->add(new SortMiddleware())
     ->add(new FilterMiddleware())
     ->add(new SelectMiddleware())
+    ->add(new QueryParamsValueValidatorMiddleware())
     ->add(new QueryParamsKeyValidatorMiddleware())
     ->add(new QueryParamsNameValidatorMiddleware())
     ->add(new EntityValidatorMiddleware());
@@ -91,5 +94,6 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
     ->add(new QueryParamsKeyValidatorMiddleware())
     ->add(new QueryParamsNameValidatorMiddleware())
     ->add(new EntityValidatorMiddleware());
+
 
 $app->run();

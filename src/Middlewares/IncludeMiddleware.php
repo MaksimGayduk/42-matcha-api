@@ -2,6 +2,8 @@
 
 namespace App\Middlewares;
 
+use App\Base\SqlQueryBuilder;
+
 class IncludeMiddleware
 {
     private $db;
@@ -37,12 +39,11 @@ class IncludeMiddleware
         foreach ($data as $mainEntity) {
             foreach ($includesEntityNames as $includesEntityName) {
 
-                $query = "
-                        SELECT * FROM {$includesEntityName} 
-                        WHERE {$mainEntityName}_id=:{$mainEntityName}_id
-                        ";
-
                 $queryParams = ["{$mainEntityName}_id" => $mainEntity['id']];
+
+                $query = SqlQueryBuilder::select($includesEntityName);
+                $query .= SqlQueryBuilder::where($queryParams);
+
                 $res = $this->db->executeQuery($query, $queryParams);
                 if ($res) {
                     $mainEntity['includes'][$includesEntityName] = $res;
