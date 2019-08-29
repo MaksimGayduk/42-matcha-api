@@ -4,8 +4,10 @@ namespace App\Middlewares;
 
 use App\Base\BaseException;
 use App\Config\Entities;
+use App\Helpers\QueryHelper;
 use App\Models\User;
 use Slim\Http\Request;
+use App\Helpers\ArrayHelper;
 
 class QueryParamsKeyValidatorMiddleware
 {
@@ -21,7 +23,7 @@ class QueryParamsKeyValidatorMiddleware
     private function validateQueryParamsKeys(Request $request): void
     {
         $queryParams = $request->getQueryParams();
-        $mainEntityName = (explode('/',  $request->getUri()->getPath()))[1];;
+        $mainEntityName =  QueryHelper::getMainEntityName($request);
         $attributes = Entities::getFieldsEntities($mainEntityName);
 
         foreach ($queryParams as $paramsKey => $paramsValue) {
@@ -35,7 +37,7 @@ class QueryParamsKeyValidatorMiddleware
 
     private function validateArrayParams(array $paramsValue, array $attributes): void
     {
-        $notValidParams = implode(', ', (array_diff(array_keys($paramsValue), array_keys($attributes))));
+        $notValidParams = implode(', ', ArrayHelper::array_diff_keys($paramsValue, $attributes));
         if ($notValidParams !== "") {
             $this->throwException("The parameter key [{$notValidParams}] does not exist");
         }

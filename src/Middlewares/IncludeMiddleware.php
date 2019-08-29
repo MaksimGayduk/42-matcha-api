@@ -3,6 +3,7 @@
 namespace App\Middlewares;
 
 use App\Base\SqlQueryBuilder;
+use App\Helpers\QueryHelper;
 
 class IncludeMiddleware
 {
@@ -24,7 +25,8 @@ class IncludeMiddleware
             return $response;
         }
 
-        $mainEntityName = $request->getAttribute('entity');
+        $mainEntityName = QueryHelper::getMainEntityName($request);
+
         $data = json_decode($response->getBody()->__toString(), true);
         $result = $this->prepareResponse($includes, $mainEntityName, $data);
 

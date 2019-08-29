@@ -15,7 +15,7 @@ class Entities
     private static $entities = [
         'users' => [
             'id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
             'login' => [
                 LengthValidator::class => [
@@ -23,53 +23,68 @@ class Entities
                     'min' => 4,
                 ]
             ],
-            'first_name' => [],
-            'last_name' => [],
+            'first_name' => [
+                LengthValidator::class => [
+                    'max' =>  12,
+                    'min' => 4,
+                ]
+            ],
+            'last_name' => [
+                LengthValidator::class => [
+                    'max' =>  12,
+                    'min' => 4,
+                ]
+            ],
             'age' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
             'password' => [
                 LengthValidator::class => [
                     'max' =>  12,
                     'min' => 8,
                 ],
-                PasswordValidator::class => [],
+                PasswordValidator::class,
             ],
             'email' => [
-                EmailValidator::class => []
+                EmailValidator::class,
             ],
             'checked' => [
-                BooleanValidator::class => []
+                BooleanValidator::class,
             ],
             'date_create' => [
                 DateValidator::class => [
-                    'format' => 'Y-m-d H:i:s',
+                    'format' => 'Y-m-d H:i:s.u',
                 ]
             ],
         ],
         'comments' => [
             'id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
             'users_id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
-            'text' => [],
+            'text' => [
+                LengthValidator::class => [
+                    'max' =>  100,
+                    'min' => 1,
+                ]
+            ],
             'data_create' => [
                 DateValidator::class => [
-                    'format' => 'Y-m-d H:i:s',
+                    'format' => 'Y-m-d H:i:s.u',
                 ]
             ],
         ],
         'likes' => [
             'id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
             'users_id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
             'comments_id' => [
-                IntValidator::class => []
+                IntValidator::class,
             ],
         ],
     ];

@@ -3,17 +3,17 @@
 namespace App\Middlewares;
 
 use App\Base\SqlQueryBuilder;
+use App\Helpers\QueryHelper;
 
 class SelectMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $entity = (explode('/',  $request->getUri()->getPath()))[1];
+        $mainEntityName = QueryHelper::getMainEntityName($request);
 
-        $query = SqlQueryBuilder::select($entity);
+        $query = SqlQueryBuilder::select($mainEntityName);
 
         $request = $request->withAttribute('query', $query);
-        $request = $request->withAttribute('entity', $entity);
         $response = $next($request, $response);
 
         return $response;

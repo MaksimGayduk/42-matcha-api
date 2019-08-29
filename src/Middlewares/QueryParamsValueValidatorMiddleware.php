@@ -5,6 +5,7 @@ namespace App\Middlewares;
 use App\Base\BaseException;
 use App\Config\Entities;
 use Slim\Http\Request;
+use App\Helpers\QueryHelper;
 
 class QueryParamsValueValidatorMiddleware
 {
@@ -24,7 +25,7 @@ class QueryParamsValueValidatorMiddleware
 
     private function validateQueryParamsValue(Request $request, array $filters): void
     {
-        $mainEntityName = (explode('/',  $request->getUri()->getPath()))[1];
+        $mainEntityName = QueryHelper::getMainEntityName($request);
         $attributes = Entities::getFieldsEntities($mainEntityName);
 
         foreach ($filters as $columnName => $value) {
@@ -32,19 +33,38 @@ class QueryParamsValueValidatorMiddleware
             $newValues = explode(',', $value);
 
             foreach ($validators as $validator => $payload) {
-                foreach ($newValues as $newValue) {
-                    if (!$validator::validate($newValue, $payload)) {
-                        $errorMessage = $validator::getErrorMessage($value, $columnName, $payload);
+                if (is_string($payload)) {
+                    $validator = $payload;
+                    $payload = [];
+                }
 
-                        throw new BaseException(
-                            $errorMessage,
-                            422,
-                            "Unprocessable Entity"
-                        );
-
-                    }
+                $errorMessage = $this->validateValues(
+                    $validator, $payload, $columnName, $newValues
+                );
+                if (!empty($errorMessage)) {
+                    throw new BaseException(
+                        $errorMessage,
+                        422,
+                        "Unprocessable Entity"
+                    );
                 }
             }
         }
+    }
+
+    private function validateValues(
+        string $validator,
+        array $payload,
+        string $columnName,
+        array $values
+    ): string
+    {
+        foreach ($values as $value) {
+            if (!$validator::validate($value, $payload)) {
+
+                return $validator::getErrorMessage($value, $columnName, $payload);
+            }
+        }
+        return "";
     }
 }

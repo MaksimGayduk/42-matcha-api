@@ -2,13 +2,15 @@
 
 namespace App\Middlewares;
 
+use App\Helpers\QueryHelper;
+
 class OutputFormatterMiddleware
 {
     public function __invoke($request, $response, $next)
     {
         $response = $next($request, $response);
 
-        $mainEntityName = $request->getAttribute('entity');
+        $mainEntityName = QueryHelper::getMainEntityName($request);
         $mainEntities = json_decode($response->getBody()->__toString(), true);
         $data = $this->prepareResponse($mainEntities, $mainEntityName);
 
