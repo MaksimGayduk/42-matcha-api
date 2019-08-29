@@ -61,10 +61,10 @@ class QueryParamsValueValidatorMiddleware
     {
         foreach ($values as $value) {
             if (!$validator::validate($value, $payload)) {
-
                 return $validator::getErrorMessage($value, $columnName, $payload);
             }
         }
+
         return "";
     }
 }

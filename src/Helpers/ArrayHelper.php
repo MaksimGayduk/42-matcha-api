@@ -30,7 +30,7 @@ class ArrayHelper
         return $res;
     }
 
-    public static function array_diff_keys(array $arr1, array $arr2): array
+    public static function arrayDiffKeys(array $arr1, array $arr2): array
     {
        return (array_diff(array_keys($arr1), array_keys($arr2)));
     }
