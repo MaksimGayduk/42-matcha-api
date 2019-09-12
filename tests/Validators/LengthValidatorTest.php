@@ -5,7 +5,7 @@ use App\Validators\LengthValidator;
 
 class LengthValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'S string true' => ['sbcde', 1, 5, ],
@@ -13,7 +13,7 @@ class LengthValidatorTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'S string false' => ['ab', 3, 5, ],
@@ -22,7 +22,7 @@ class LengthValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueLength($value, $min, $max)
     {
@@ -33,7 +33,7 @@ class LengthValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseLength($value, $min, $max)
     {

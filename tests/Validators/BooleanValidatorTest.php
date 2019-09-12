@@ -5,7 +5,7 @@ use App\Validators\BooleanValidator;
 
 class BooleanValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'true string' => ['1'],
@@ -15,7 +15,7 @@ class BooleanValidatorTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'int' => [2],
@@ -28,7 +28,7 @@ class BooleanValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueBoolean($value)
     {
@@ -36,7 +36,7 @@ class BooleanValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseBoolean($value)
     {

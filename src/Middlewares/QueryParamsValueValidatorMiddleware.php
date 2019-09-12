@@ -25,7 +25,7 @@ class QueryParamsValueValidatorMiddleware
 
     private function validateQueryParamsValue(Request $request, array $filters): void
     {
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
         $attributes = Entities::getFieldsEntities($mainEntityName);
 
         foreach ($filters as $columnName => $value) {

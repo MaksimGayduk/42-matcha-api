@@ -5,14 +5,14 @@ use App\Validators\DateValidator;
 
 class DateValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'Date true' => ['2019-08-28 14:24:19.993157', 'Y-m-d H:i:s.u'],
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'Date false 1' => ['2019-08-28-14:24:19.993157', 'Y-m-d H:i:s.u'],
@@ -27,7 +27,7 @@ class DateValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueDate($value, $format)
     {
@@ -37,7 +37,7 @@ class DateValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseDate($value, $format)
     {

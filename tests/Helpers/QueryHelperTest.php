@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class QueryHelperTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'true 1' => [
@@ -23,7 +23,7 @@ class QueryHelperTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'false 1' => [
@@ -46,7 +46,7 @@ class QueryHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueGetMainEntityName($cmp, $value)
     {
@@ -54,7 +54,7 @@ class QueryHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseGetMainEntityName($cmp, $value)
     {
