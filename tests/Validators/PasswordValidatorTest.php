@@ -5,7 +5,7 @@ use App\Validators\PasswordValidator;
 
 class PasswordValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'Password true 1' => ['Aleksey!123'],
@@ -14,7 +14,7 @@ class PasswordValidatorTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'Password false 1' => ['Aleksey!'],
@@ -30,7 +30,7 @@ class PasswordValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueEmail($value)
     {
@@ -38,7 +38,7 @@ class PasswordValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseEmail($value)
     {

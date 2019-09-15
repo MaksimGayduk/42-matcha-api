@@ -5,7 +5,7 @@ use App\Validators\EmailValidator;
 
 class EmailValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'Email true 1' => ['aleksey@gmail.com'],
@@ -14,7 +14,7 @@ class EmailValidatorTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'Email false 1' => ['alekseygmail.com'],
@@ -28,7 +28,7 @@ class EmailValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
     public function testTrueEmail($value)
     {
@@ -36,7 +36,7 @@ class EmailValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testFalseEmail($value)
     {

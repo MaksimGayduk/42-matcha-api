@@ -9,7 +9,7 @@ class SelectMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
 
         $query = SqlQueryBuilder::select($mainEntityName);
 

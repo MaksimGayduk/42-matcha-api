@@ -25,7 +25,7 @@ class IncludeMiddleware
             return $response;
         }
 
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
 
         $data = json_decode($response->getBody()->__toString(), true);
         $result = $this->prepareResponse($includes, $mainEntityName, $data);

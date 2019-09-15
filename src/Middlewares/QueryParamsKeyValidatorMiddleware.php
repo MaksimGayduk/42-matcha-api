@@ -23,7 +23,7 @@ class QueryParamsKeyValidatorMiddleware
     private function validateQueryParamsKeys(Request $request): void
     {
         $queryParams = $request->getQueryParams();
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
         $attributes = Entities::getFieldsEntities($mainEntityName);
 
         foreach ($queryParams as $paramsKey => $paramsValue) {

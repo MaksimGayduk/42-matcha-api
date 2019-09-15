@@ -5,7 +5,7 @@ use App\Validators\IntValidator;
 
 class IntValidatorTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'only digits in string' => ['123'],
@@ -15,7 +15,7 @@ class IntValidatorTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'chars & digits in string' => ['test123'],
@@ -25,7 +25,7 @@ class IntValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueProvider()
+     * @dataProvider trueValueProvider()
      */
     public function testIsDigit($value)
     {
@@ -33,7 +33,7 @@ class IntValidatorTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
     public function testIsString($value)
     {

@@ -21,9 +21,8 @@ class SqlQueryBuilder
             if (is_array($value)) {
                 $preparedString = '';
                 $count = count($value) - 1;
-                foreach ($value as $item) {
-                    $preparedKey = $key . '_' . $item;
-                    $preparedString .= ":${preparedKey}";
+                foreach ($value as $k => $v) {
+                    $preparedString .= ":{$k}";
                     if ($count--) {
                         $preparedString .= ',';
                     }

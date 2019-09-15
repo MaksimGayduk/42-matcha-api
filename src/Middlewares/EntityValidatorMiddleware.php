@@ -10,7 +10,7 @@ class EntityValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
         $entityFields = Entities::getFieldsEntities($mainEntityName);
 
         if (empty($entityFields)) {

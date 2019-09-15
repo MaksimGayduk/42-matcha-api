@@ -9,7 +9,7 @@ class IntValidator implements ValidatorInterface
 
     public static function validate(string $value, array $payload = []): bool
     {
-        return filter_var($value, FILTER_VALIDATE_INT);
+        return filter_var($value, FILTER_VALIDATE_INT) !== false;
     }
 
     public static function getErrorMessage(

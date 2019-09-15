@@ -1,19 +1,16 @@
 <?php
 
-use Slim\App;
 use App\Middlewares\FilterMiddleware;
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\Environment;
 use Slim\Http\Uri;
 use Slim\Http\Headers;
-use Slim\Http\RequestBody;
 use Slim\Http\Stream;
 
 class FilterMiddlewareTest extends TestCase
 {
-    public function addTrueValueProvider()
+    public function trueValueProvider()
     {
         return [
             'true 1' => [
@@ -39,7 +36,7 @@ class FilterMiddlewareTest extends TestCase
         ];
     }
 
-    public function addFalseValueProvider()
+    public function falseValueProvider()
     {
         return [
             'false 1' => [
@@ -65,7 +62,7 @@ class FilterMiddlewareTest extends TestCase
         ];
     }
 
-    private function createRequest(array $filters, string $baseQuery): Request
+    private function createRequest(array $filters, string $baseSqlQuery): Request
     {
         $request = new Request(
             'GET',
@@ -77,18 +74,18 @@ class FilterMiddlewareTest extends TestCase
             )
         );
 
-        $request = $request->withQueryParams($filters); //['filters' => ['id' => '1']]
-        $request = $request->withAttribute('query', $baseQuery); //'SELECT * FROM users'
+        $request = $request->withQueryParams($filters);
+        $request = $request->withAttribute('query', $baseSqlQuery);
 
         return $request;
     }
 
     /**
-     * @dataProvider addTrueValueProvider
+     * @dataProvider trueValueProvider
      */
-    public function testCheckTrueValueMiddlewareResponse($filters, $baseQuery, $cmpQuery)
+    public function testCheckTrueValueMiddlewareResponse(array $filters, string $baseSqlQuery, array $cmpParams)
     {
-        $request = $this->createRequest($filters, $baseQuery);
+        $request = $this->createRequest($filters, $baseSqlQuery);
         $response = new Response();
         $middleware = new FilterMiddleware();
 
@@ -106,15 +103,15 @@ class FilterMiddlewareTest extends TestCase
             }
         );
 
-        $this->assertEquals($cmpQuery, $middlewareResponse);
+        $this->assertEquals($cmpParams, $middlewareResponse);
     }
 
     /**
-     * @dataProvider addFalseValueProvider
+     * @dataProvider falseValueProvider
      */
-    public function testCheckFalseValueMiddlewareResponse($filters, $baseQuery, $cmpQuery)
+    public function testCheckFalseValueMiddlewareResponse(array $filters, string $baseSqlQuery, array $cmpParams)
     {
-        $request = $this->createRequest($filters, $baseQuery);
+        $request = $this->createRequest($filters, $baseSqlQuery);
         $response = new Response();
         $middleware = new FilterMiddleware();
 
@@ -132,6 +129,6 @@ class FilterMiddlewareTest extends TestCase
             }
         );
 
-        $this->assertNotEquals($cmpQuery, $middlewareResponse);
+        $this->assertNotEquals($cmpParams, $middlewareResponse);
     }
 }

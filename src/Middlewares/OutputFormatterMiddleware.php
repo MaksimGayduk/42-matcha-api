@@ -10,7 +10,7 @@ class OutputFormatterMiddleware
     {
         $response = $next($request, $response);
 
-        $mainEntityName = QueryHelper::getMainEntityName($request);
+        $mainEntityName = QueryHelper::getMainEntityName($request->getUri()->getPath());
         $mainEntities = json_decode($response->getBody()->__toString(), true);
         $data = $this->prepareResponse($mainEntities, $mainEntityName);
 

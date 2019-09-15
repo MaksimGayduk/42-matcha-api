@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class ArrayHelperTest extends TestCase
 {
-    public function addTrueValueUnnestProvider()
+    public function trueValueUnnestProvider()
     {
         return [
             'unnest true 1' => [
@@ -23,7 +23,7 @@ class ArrayHelperTest extends TestCase
         ];
     }
 
-    public function addFalseValueUnnestProvider()
+    public function falseValueUnnestProvider()
     {
         return [
             'unnest false 1' => [
@@ -46,7 +46,7 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueUnnestProvider
+     * @dataProvider trueValueUnnestProvider
      */
     public function testTrueUnnest($arrCmp, $arr)
     {
@@ -54,14 +54,14 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueUnnestProvider
+     * @dataProvider falseValueUnnestProvider
      */
     public function testFalseUnnest($arrCmp, $arr)
     {
         $this->assertNotEquals($arrCmp, ArrayHelper::unnest($arr));
     }
 
-    public function addTrueValueArrayDiffKeysProvider()
+    public function trueValueArrayDiffKeysProvider()
     {
         return [
             'arrayDiffKeys true 1' => [
@@ -87,7 +87,7 @@ class ArrayHelperTest extends TestCase
         ];
     }
 
-    public function addFalseValueArrayDiffKeysProvider()
+    public function falseValueArrayDiffKeysProvider()
     {
         return [
             'arrayDiffKeys false 1' => [
@@ -109,7 +109,7 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueArrayDiffKeysProvider
+     * @dataProvider trueValueArrayDiffKeysProvider
      */
     public function testTrueArrayDiffKeys($cmp, $arr1, $arr2)
     {
@@ -117,14 +117,14 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueArrayDiffKeysProvider
+     * @dataProvider falseValueArrayDiffKeysProvider
      */
     public function testFalseArrayDiffKeys($cmp, $arr1, $arr2)
     {
         $this->assertNotEquals($cmp, ArrayHelper::arrayDiffKeys($arr1, $arr2));
     }
 
-    public function addTrueValueGetProvider()
+    public function trueValueGetProvider()
     {
         return [
             'Get true 1' => [
@@ -155,7 +155,7 @@ class ArrayHelperTest extends TestCase
         ];
     }
 
-    public function addFalseValueGetProvider()
+    public function falseValueGetProvider()
     {
         return [
             'Get false 1' => [
@@ -189,7 +189,7 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addTrueValueGetProvider
+     * @dataProvider trueValueGetProvider
      */
     public function testTrueGet($cmp, $array, $key)
     {
@@ -197,7 +197,7 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @dataProvider addFalseValueGetProvider
+     * @dataProvider falseValueGetProvider
      */
     public function testFalseGet($cmp, $array, $key)
     {
