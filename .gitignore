@@ -1,5 +1,6 @@
 .*
 !.gitignore
+!.travis.yml
 
 # Local data base dump
 pgsql/db_dump
