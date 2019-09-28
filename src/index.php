@@ -14,6 +14,9 @@ use App\Middlewares\OutputFormatterMiddleware;
 use App\Middlewares\EntityValidatorMiddleware;
 use App\Middlewares\IncludeMiddleware;
 use App\Middlewares\QueryParamsValueValidatorMiddleware;
+use App\Middlewares\FieldsEntityValueValidatorMiddleware;
+use App\Middlewares\FieldsEntityNameValidatorModdleware;
+use App\Base\SqlQueryBuilder;
 
 define('ROOT', __DIR__);
 require_once (ROOT . '/../vendor/autoload.php');
@@ -61,7 +64,6 @@ $app->get('/{entity}', function (Request $request, Response $response, $args)
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
 
-
     return $response->withJson($result) ;
 })
     ->add(new IncludeMiddleware($container['objectDataBase']))
@@ -75,6 +77,7 @@ $app->get('/{entity}', function (Request $request, Response $response, $args)
     ->add(new EntityValidatorMiddleware());
 
 
+
 $app->get('/{entity}/{id}', function (Request $request, Response $response, $args)
 {
     $db = $this->get('objectDataBase');
@@ -82,8 +85,6 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
     $query = $request->getAttribute('query');
     $queryParams = $request->getAttribute('queryParams');
     $result = $db->executeQuery($query, $queryParams);
-
-
 
     return $response->withJson($result);
 })
@@ -95,5 +96,25 @@ $app->get('/{entity}/{id}', function (Request $request, Response $response, $arg
     ->add(new QueryParamsNameValidatorMiddleware())
     ->add(new EntityValidatorMiddleware());
 
+
+
+$app->post('/{entity}', function (Request $request, Response $response, $args)
+{
+    $db = $this->get('objectDataBase');
+
+    $body = json_decode($request->getBody()->__toString(), true);
+    $mainEntityName = $body['data']['type'];
+    $bodyAttributes = $body['data']['attributes'];
+    $query = SqlQueryBuilder::insert($mainEntityName, $bodyAttributes);
+
+    $db->executeQuery($query, $bodyAttributes);
+    $result = $db->getNewRecord($mainEntityName);
+
+    return $response->withJson($result);
+})
+    ->add(new OutputFormatterMiddleware())
+    ->add(new FieldsEntityValueValidatorMiddleware($container['objectDataBase']))
+    ->add(new FieldsEntityNameValidatorModdleware())
+    ->add(new EntityValidatorMiddleware());
 
 $app->run();

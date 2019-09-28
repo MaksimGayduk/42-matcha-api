@@ -4,7 +4,6 @@ namespace App\Base;
 
 class SqlQueryBuilder
 {
-
     public static function select(string $entity): ?string
     {
         $query = 'SELECT * FROM ' . $entity;
@@ -35,6 +34,31 @@ class SqlQueryBuilder
                 $query .= " AND";
             }
         }
+
+        return $query;
+    }
+
+    public static function insert(string $entityName, array $bodyAttributes)
+    {
+        unset($bodyAttributes['id']);
+
+        $query = "INSERT INTO {$entityName} (";
+        $val = " VALUES (";
+        $count = count($bodyAttributes);
+
+        foreach ($bodyAttributes as $key => $value) {
+            $query .= "$key";
+            $val .= ":$key";
+
+            if (--$count) {
+                $query .= ", ";
+                $val .= ", ";
+            } else {
+                $query .= ")";
+                $val .= ")";
+            }
+        }
+        $query = $query . $val . ";";
 
         return $query;
     }

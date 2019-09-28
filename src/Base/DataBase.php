@@ -41,4 +41,14 @@ class DataBase
        $res->execute($queryParams);
        return $res->fetchAll();
     }
+
+    public function getNewRecord(string $mainEntityName): ?array
+    {
+        $id = $this->pdo->lastInsertId();
+        $query = "SELECT * FROM {$mainEntityName} WHERE id = :id";
+
+        $res = $this->executeQuery($query, ['id' => $id]);
+
+        return $res;
+    }
 }

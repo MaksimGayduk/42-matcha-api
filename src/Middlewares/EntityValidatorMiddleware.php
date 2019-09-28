@@ -5,6 +5,8 @@ namespace App\Middlewares;
 use App\Base\BaseException;
 use App\Config\Entities;
 use App\Helpers\QueryHelper;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class EntityValidatorMiddleware
 {

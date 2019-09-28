@@ -4,11 +4,12 @@ namespace App\Validators;
 
 use App\Interfaces\ValidatorInterface;
 
-class EmailValidator implements ValidatorInterface
+class RequiredFieldsValidator implements ValidatorInterface
 {
     public static function validate($value, array $payload = []): bool
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL);
+
+        return !is_null($value) && $value !== "";
     }
 
     public static function getErrorMessage(
@@ -17,6 +18,7 @@ class EmailValidator implements ValidatorInterface
         array $payload = []
     ): string
     {
-        return "Incorrect email";
+
+        return "The field [{$columnName}] required";
     }
 }

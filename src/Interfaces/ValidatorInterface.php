@@ -5,10 +5,10 @@ namespace App\Interfaces;
 interface ValidatorInterface
 {
 
-    public static function validate(string $value, array $payload = []): bool;
+    public static function validate($value, array $payload = []): bool;
 
     public static function getErrorMessage(
-        string $value,
+        $value,
         string $columnName,
         array $payload = []
     ): string;

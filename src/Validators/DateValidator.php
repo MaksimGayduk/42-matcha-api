@@ -7,15 +7,15 @@ use DateTime;
 
 class DateValidator implements ValidatorInterface
 {
-    public static function validate(string $value, array $payload = []): bool
+    public static function validate($value, array $payload = []): bool
     {
         $date = DateTime::createFromFormat($payload['format'], $value);
 
-        return ( $date && $date->format($payload['format']) === $value);
+        return ($date && $date->format($payload['format']) === $value);
     }
 
     public static function getErrorMessage(
-        string $value,
+        $value,
         string $columnName,
         array $payload = []
     ): string
