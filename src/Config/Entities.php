@@ -9,6 +9,9 @@ use App\Validators\LengthValidator;
 use App\Validators\IntValidator;
 use App\Validators\EmailValidator;
 use App\Validators\PasswordValidator;
+use App\Validators\RequiredFieldsValidator;
+use App\Validators\UniqueValidator;
+use App\Validators\UsernameValidator;
 
 class Entities
 {
@@ -17,23 +20,27 @@ class Entities
             'id' => [
                 IntValidator::class,
             ],
-            'login' => [
+            'username' => [
+                RequiredFieldsValidator::class,
                 LengthValidator::class => [
                     'max' =>  12,
                     'min' => 4,
-                ]
+                ],
+                UsernameValidator::class,
+                UniqueValidator::class
             ],
             'first_name' => [
+                RequiredFieldsValidator::class,
                 LengthValidator::class => [
                     'max' =>  12,
                     'min' => 4,
-                ]
+                ],
             ],
             'last_name' => [
                 LengthValidator::class => [
                     'max' =>  12,
                     'min' => 4,
-                ]
+                ],
             ],
             'age' => [
                 IntValidator::class,
@@ -46,7 +53,7 @@ class Entities
                 PasswordValidator::class,
             ],
             'email' => [
-                EmailValidator::class,
+                EmailValidator::class
             ],
             'checked' => [
                 BooleanValidator::class,
@@ -125,4 +132,5 @@ class Entities
     {
         return in_array($relationEntityName, self::$relationship[$mainEntityName]);
     }
+
 }

@@ -4,25 +4,20 @@ namespace App\Validators;
 
 use App\Interfaces\ValidatorInterface;
 
-class PasswordValidator implements ValidatorInterface
+class UsernameValidator implements ValidatorInterface
 {
     private static $regexps = [
         [
             'regexp' =>'/[A-Z]/',
-            'message' => "Password must have at least one uppercase letter",
+            'message' => "[userName] must have at least one uppercase letter",
         ],
         [
             'regexp' =>'/[a-z]/',
-            'message' =>"Password must have at least one lowercase letter"
+            'message' =>"[userName] must have at least one lowercase letter"
         ],
         [
             'regexp' => '/[0-9]/',
-            'message' =>"Password must have at least one digit"
-        ],
-        [
-            'regexp' => '/[!@#$%^&*()_=+]/',
-            'message' => "Password must have at least one spec symbol !@#$%^&*()_=+",
-
+            'message' =>"[userName] must have at least one digit"
         ],
     ];
 
@@ -34,7 +29,7 @@ class PasswordValidator implements ValidatorInterface
             }
         }
 
-       return true;
+        return true;
     }
 
     public static function getErrorMessage(

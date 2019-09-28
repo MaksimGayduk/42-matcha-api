@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class ArrayHelper
 {
-    public static function get(array $arr, string $key): ?array
+    public static function get(array $arr, string $key)
     {
         if (!key_exists($key, $arr)) {
             return null;

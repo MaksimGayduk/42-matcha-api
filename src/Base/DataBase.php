@@ -41,4 +41,5 @@ class DataBase
        $res->execute($queryParams);
        return $res->fetchAll();
     }
+
 }

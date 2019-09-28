@@ -6,11 +6,17 @@ use App\Base\BaseException;
 use App\Config\Entities;
 use Slim\Http\Request;
 use App\Helpers\QueryHelper;
+use Slim\Http\Response;
 
 class QueryParamsValueValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
+        /**
+         * @var Request $request
+         * @var Response $request
+         */
+
         $queryParams = $request->getQueryParams();
 
         if (isset($queryParams['filters'])) {
