@@ -10,7 +10,7 @@ use App\Validators\UniqueValidator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class FieldsEntityValueValidatorMiddleware
+class EntityFieldValueValidatorMiddleware
 {
     public function __construct($objectDataBase)
     {

@@ -12,9 +12,11 @@ class UniqueValidator implements ValidatorInterface
         $res = true;
 
         if (!empty($payload)) {
-            $select = SqlQueryBuilder::select($payload['entityName']);
-            $where = SqlQueryBuilder::where([$payload['columnName'] => $value]);
-            $query = $select . $where;
+            $query = SqlQueryBuilder::buildQuery($payload['entityName'], [$payload['columnName'] => $value]);
+
+//            $select = SqlQueryBuilder::select($payload['entityName']);
+//            $where = SqlQueryBuilder::where([$payload['columnName'] => $value]);
+//            $query = $select . $where;
 
             $res = $payload['db']->executeQuery($query, [$payload['columnName'] => $value]);
             $res = empty($res);

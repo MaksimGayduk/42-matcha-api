@@ -40,8 +40,6 @@ class SqlQueryBuilder
 
     public static function insert(string $entityName, array $bodyAttributes)
     {
-        unset($bodyAttributes['id']);
-
         $query = "INSERT INTO {$entityName} (";
         $val = " VALUES (";
         $count = count($bodyAttributes);
@@ -58,8 +56,25 @@ class SqlQueryBuilder
                 $val .= ")";
             }
         }
-        $query = $query . $val . ";";
+        $query = $query . $val . " RETURNING *;";
 
         return $query;
+    }
+
+    public static function buildQuery(string $selectEntityName = null, array $whereData = [], array $insertData = [])
+    {
+        $query = "";
+        if (isset($selectEntityName)) {
+            $query = self::select($selectEntityName);
+        }
+        if (!empty($whereData)) {
+            $query .= self::where($whereData);
+        }
+        if (!empty($insertData)) {
+            $query = self::insert($insertData['entityName'], $insertData['fields']);
+        }
+
+        return $query;
+
     }
 }

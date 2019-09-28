@@ -20,7 +20,7 @@ class Entities
             'id' => [
                 IntValidator::class,
             ],
-            'user_name' => [
+            'username' => [
                 RequiredFieldsValidator::class,
                 LengthValidator::class => [
                     'max' =>  12,
@@ -133,19 +133,4 @@ class Entities
         return in_array($relationEntityName, self::$relationship[$mainEntityName]);
     }
 
-    public static function getRequiredFieldsEntity(string $mainEntityName): ?array
-    {
-        $fields = self::getFieldsEntities($mainEntityName);
-
-        foreach ($fields as $fieldsName => $fieldsValues) {
-            foreach ($fieldsValues as $value) {
-                if (is_string($value) && $value === RequiredFieldsValidator::class){
-                    $res[] = $fieldsName;
-                }
-            }
-        }
-        $res = array_flip($res);
-
-        return ($res ?? null);
-    }
 }

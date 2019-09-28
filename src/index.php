@@ -14,8 +14,8 @@ use App\Middlewares\OutputFormatterMiddleware;
 use App\Middlewares\EntityValidatorMiddleware;
 use App\Middlewares\IncludeMiddleware;
 use App\Middlewares\QueryParamsValueValidatorMiddleware;
-use App\Middlewares\FieldsEntityValueValidatorMiddleware;
-use App\Middlewares\FieldsEntityNameValidatorModdleware;
+use App\Middlewares\EntityFieldValueValidatorMiddleware;
+use App\Middlewares\EntityFieldNameValidatorMiddleware;
 use App\Base\SqlQueryBuilder;
 
 define('ROOT', __DIR__);
@@ -105,16 +105,16 @@ $app->post('/{entity}', function (Request $request, Response $response, $args)
     $body = json_decode($request->getBody()->__toString(), true);
     $mainEntityName = $body['data']['type'];
     $bodyAttributes = $body['data']['attributes'];
+    unset($bodyAttributes['id']);
     $query = SqlQueryBuilder::insert($mainEntityName, $bodyAttributes);
 
-    $db->executeQuery($query, $bodyAttributes);
-    $result = $db->getNewRecord($mainEntityName);
+    $result = $db->executeQuery($query, $bodyAttributes);
 
     return $response->withJson($result);
 })
     ->add(new OutputFormatterMiddleware())
-    ->add(new FieldsEntityValueValidatorMiddleware($container['objectDataBase']))
-    ->add(new FieldsEntityNameValidatorModdleware())
+    ->add(new EntityFieldValueValidatorMiddleware($container['objectDataBase']))
+    ->add(new EntityFieldNameValidatorMiddleware())
     ->add(new EntityValidatorMiddleware());
 
 $app->run();

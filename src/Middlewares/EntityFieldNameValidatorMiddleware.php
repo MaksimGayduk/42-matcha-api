@@ -7,7 +7,7 @@ use App\Config\Entities;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class FieldsEntityNameValidatorModdleware
+class EntityFieldNameValidatorMiddleware
 {
     public function __invoke($request, $response, $next)
     {
